@@ -21,7 +21,7 @@ Forja runs AI kits from one terminal command: understanding a legacy system, req
 
 | Computer | Command |
 |---|---|
-| macOS or Linux, brew | `brew tap Omara8/forja https://github.com/Omara8/Forja && brew install forja` |
+| macOS or Linux, brew | `brew tap Omara8/forja https://github.com/Omara8/Forja && brew install omara8/forja/forja` |
 | macOS or Linux, curl | `curl -fsSL https://raw.githubusercontent.com/Omara8/Forja/main/install.sh \| sh` |
 | Windows, PowerShell | `irm https://raw.githubusercontent.com/Omara8/Forja/main/install.ps1 \| iex` |
 
