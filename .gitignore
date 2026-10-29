@@ -1,0 +1,32 @@
+# OS files
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local test downloads and builds
+dist/
+*.tar.gz
+*.zip
+*.sha256
+
+# Logs and env files
+*.log
+.env
+.env.*
+
+# Python leftovers
+__pycache__/
+*.pyc
+*.so
+*.pyd
+
+# Never ignore Formula/ or docs/
+!Formula/**
+!docs/**
