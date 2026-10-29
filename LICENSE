@@ -1,0 +1,21 @@
+Forja - End-User License
+
+Copyright (c) 2026 Mahmoud Omara. All rights reserved.
+
+Forja is proprietary software. Its source code is not published. This repository holds Forja's documentation, its
+installers and its release files.
+
+1. Use. You may download, install and run Forja's release files, free of charge, on any computer you use, for personal
+   or commercial work.
+2. Restrictions. You may not:
+   a. copy, sell, rent, sublicense or redistribute Forja or any part of it, except by pointing others to this repository;
+   b. decompile, disassemble, decrypt or otherwise reverse engineer Forja's files, or extract its prompts, stack packs or
+      templates, except where the law where you live allows it despite this restriction;
+   c. remove or change this license, the copyright notice or Forja's file fingerprints (IT-NOTE.md);
+   d. use Forja's prompts, stack packs, templates or code to build a product or service that competes with Forja.
+3. Your work. What Forja writes for you (requirements, designs, plans, tests, code, reports) is yours.
+4. No warranty. Forja is provided "as is", without warranty of any kind. Its AI steps run with your own AI tool and
+   account, and you review and decide what to keep. The author is not liable for any damage arising from its use.
+5. Ending. This license ends automatically if you break it; you then delete every copy of Forja you have.
+
+The documentation and installers in this repository may be read and shared freely.
