@@ -4,7 +4,7 @@
 #   curl -fsSL https://raw.githubusercontent.com/Omara8/Forja/main/install.sh | sh
 #
 # Run it again to update: it replaces Forja and keeps your settings, archive and products.
-#   FORJA_VERSION=0.7.0 ...   a given release instead of the newest
+#   FORJA_VERSION=0.7.3 ...   a given release instead of the newest
 #   FORJA_ROOT=<folder> ...   another install folder
 #
 # Where Forja goes (never a hidden folder):
