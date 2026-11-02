@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.7.3 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.7.4 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from one terminal at a time.
 
 ## Stages, roles and what each writes
