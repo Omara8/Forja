@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.7.4-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.7.4">
+<img src="https://img.shields.io/badge/forja-0.7.5-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.7.5">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
 <img src="https://img.shields.io/badge/kits-6%20·%2037%20skills%20·%2056%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 37 skills, 56 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
@@ -169,7 +169,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | `define-contracts` | The contracts between the components |
 | `design-sections` | One section per platform and its modules |
 | `review-architecture` | Review and stage approval → HIGH-LEVEL-DESIGN.md |
-| `architecture-map` | DESIGN-MAP.html from the objects |
+| `architecture-map` | DESIGN-MAP.html from the objects; also rebuilt by itself after every architecture run, merge and approval |
 | `architecture-section` | Design one section from a bundle someone sent you |
 | `architecture-merge` | Bring a returned section bundle back |
 
