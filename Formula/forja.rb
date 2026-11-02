@@ -1,4 +1,4 @@
-# Forja 0.7.5: written by the release workflow (build/formula.py in the private repo). Do not edit by hand. (Placeholder checksums until the first release.)
+# Forja 0.7.5: written by the release workflow (build/formula.py in the private repo). Do not edit by hand.
 class Forja < Formula
   desc "AI kits for software delivery, run headless from one terminal command"
   homepage "https://github.com/Omara8/Forja"
@@ -8,18 +8,18 @@ class Forja < Formula
   on_macos do
     on_arm do
       url "https://github.com/Omara8/Forja/releases/download/v0.7.5/forja-macos-arm64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "99234ef4fbdbac19360bfb014db56bf092e64d090389b296257ad7cf4b903efa"
     end
     on_intel do
       url "https://github.com/Omara8/Forja/releases/download/v0.7.5/forja-macos-x64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "aaa02af2399a537261444f97365f154f2349a5b85d1532390fe8b9bd60ed0a00"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/Omara8/Forja/releases/download/v0.7.5/forja-linux-x64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+      sha256 "de86637c6d988463f6bedf74307fa2507dd6fa38c8a64f6df5c87dc3ca32a561"
     end
   end
 
