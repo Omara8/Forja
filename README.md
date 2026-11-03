@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.7.5-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.7.5">
+<img src="https://img.shields.io/badge/forja-0.8.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.8.0">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
-<img src="https://img.shields.io/badge/kits-6%20·%2037%20skills%20·%2056%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 37 skills, 56 agents">
+<img src="https://img.shields.io/badge/kits-6%20·%2040%20skills%20·%2059%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 40 skills, 59 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
 <img src="https://img.shields.io/badge/macOS%20·%20Linux%20·%20Windows-69727f?style=flat-square&labelColor=20242b" alt="macOS, Linux and Windows">
 <img src="https://img.shields.io/badge/license-proprietary-69727f?style=flat-square&labelColor=20242b" alt="Proprietary license">
@@ -122,14 +122,14 @@ Two modes, set once when the product is added. **A new product**: stages run in 
 ## Kits and skills
 
 <!-- forja:kits -->
-Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: `forja <command> <skill>`. 6 kits, 37 skills, 56 agents. One install brings all of them: [Install](#install).
+Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: `forja <command> <skill>`. 6 kits, 40 skills, 59 agents. One install brings all of them: [Install](#install).
 
 | | Kit | Command | For | Skills |
 |---|---|---|---|---|
 | <img src="docs/assets/readme/kits/kit-code-insight.svg" width="20" height="20" alt=""> | **code-insight** | `forja insight` | Understanding legacy code and planning its rebuild | 4 |
-| <img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="20" height="20" alt=""> | **scope-clarity** | `forja requirements` | Requirements: needs, scope, acceptance criteria, sign-off | 5 |
-| <img src="docs/assets/readme/kits/kit-architecture-blueprint.svg" width="20" height="20" alt=""> | **architecture-blueprint** | `forja architecture` | Architecture across every stack | 9 |
-| <img src="docs/assets/readme/kits/kit-delivery-cadence.svg" width="20" height="20" alt=""> | **delivery-cadence** | `forja planning` | Planning delivery: one plan, each story in the repo that builds it | 5 |
+| <img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="20" height="20" alt=""> | **scope-clarity** | `forja requirements` | Requirements: needs, scope, acceptance criteria, sign-off | 6 |
+| <img src="docs/assets/readme/kits/kit-architecture-blueprint.svg" width="20" height="20" alt=""> | **architecture-blueprint** | `forja architecture` | Architecture across every stack | 10 |
+| <img src="docs/assets/readme/kits/kit-delivery-cadence.svg" width="20" height="20" alt=""> | **delivery-cadence** | `forja planning` | Planning delivery: one plan, each story in the repo that builds it | 6 |
 | <img src="docs/assets/readme/kits/kit-test-readiness.svg" width="20" height="20" alt=""> | **test-readiness** | `forja test-plan` | Test preparation: plan, cases, coverage, data, automation | 5 |
 | <img src="docs/assets/readme/kits/kit-code-velocity.svg" width="20" height="20" alt=""> | **code-velocity** | `forja development` | Writing, testing and reviewing code | 9 |
 
@@ -146,7 +146,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 </details>
 
 <details>
-<summary><img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="28" height="28" align="absmiddle" alt=""> <b>scope-clarity</b> · <code>forja requirements</code> · 5 skills<br><sub>Turn what stakeholders need into an approved scope, feature by feature, in business language.</sub></summary>
+<summary><img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="28" height="28" align="absmiddle" alt=""> <b>scope-clarity</b> · <code>forja requirements</code> · 6 skills<br><sub>Turn what stakeholders need into an approved scope, feature by feature, in business language.</sub></summary>
 
 | Skill | What it does |
 |---|---|
@@ -155,11 +155,12 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | `analyze-requirements` | Scope → business rules with their values, flows with their steps; gaps as questions |
 | `define-acceptance-criteria` | Given / When / Then for every flow outcome and rule |
 | `review-requirements` | Read-back, review, sign-off and approval → APPROVED-SCOPE.md |
+| `append-requirements` | New requirements, and changes to existing ones, as new items (nothing old is edited) |
 
 </details>
 
 <details>
-<summary><img src="docs/assets/readme/kits/kit-architecture-blueprint.svg" width="28" height="28" align="absmiddle" alt=""> <b>architecture-blueprint</b> · <code>forja architecture</code> · 9 skills<br><sub>Design the whole product before it is built: one high-level design, one section per stack, every conflict answered.</sub></summary>
+<summary><img src="docs/assets/readme/kits/kit-architecture-blueprint.svg" width="28" height="28" align="absmiddle" alt=""> <b>architecture-blueprint</b> · <code>forja architecture</code> · 10 skills<br><sub>Design the whole product before it is built: one high-level design, one section per stack, every conflict answered.</sub></summary>
 
 | Skill | What it does |
 |---|---|
@@ -169,6 +170,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | `define-contracts` | The contracts between the components |
 | `design-sections` | One section per platform and its modules |
 | `review-architecture` | Review and stage approval → HIGH-LEVEL-DESIGN.md |
+| `append-design` | New design, and changes to existing design, as new items (nothing old is edited) |
 | `architecture-map` | DESIGN-MAP.html from the objects; also rebuilt by itself after every architecture run, merge and approval |
 | `architecture-section` | Design one section from a bundle someone sent you |
 | `architecture-merge` | Bring a returned section bundle back |
@@ -176,7 +178,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 </details>
 
 <details>
-<summary><img src="docs/assets/readme/kits/kit-delivery-cadence.svg" width="28" height="28" align="absmiddle" alt=""> <b>delivery-cadence</b> · <code>forja planning</code> · 5 skills<br><sub>Turn an approved scope and an architecture into one plan for the product: each platform plans only what it builds.</sub></summary>
+<summary><img src="docs/assets/readme/kits/kit-delivery-cadence.svg" width="28" height="28" align="absmiddle" alt=""> <b>delivery-cadence</b> · <code>forja planning</code> · 6 skills<br><sub>Turn an approved scope and an architecture into one plan for the product: each platform plans only what it builds.</sub></summary>
 
 | Skill | What it does |
 |---|---|
@@ -185,6 +187,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | `map-dependencies` | What blocks what; what the code already has |
 | `plan-iterations` | The plan: dates, team, capacity, increments, releases; the backlog order |
 | `planning-check` | The planning review, then the approval: the plan's tickets move to To Do |
+| `append-plan` | New work, and changes to planned work, as new tickets (nothing old is edited) |
 
 </details>
 

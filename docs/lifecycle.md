@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.7.5 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.8.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from one terminal at a time.
 
 ## Stages, roles and what each writes
@@ -95,7 +95,7 @@ Bugs are never frozen: they are edited or cancelled at any time. Everything an a
 |---|---|
 | Raised | The reason, the evidence and the proposal (set, create or retire), pinned to the target's version. The accepting role is the target's role |
 | Simulated | The proposal is applied to a copy of the product on this computer (its temporary folder is deleted when the simulation ends); every item it touches and everything relying on them is checked, and the change-simulator reads what the meaning change breaks: passing or failing. Nothing is applied |
-| Applied | The accepting role applies a passing request, in a run of its own, and a decision is recorded. It creates a new change ticket (label `change`, link `replaces` to the old ticket) in the Backlog for the next sprint. An old ticket still In Progress is cancelled (Done, resolution `cancelled`); a Done ticket stays Done. A changed object gets a new version (its version log names the request) and stays approved |
+| Applied | The accepting role applies a passing request, in a run of its own, and a decision is recorded. It creates a new change ticket (label `change`, link `replaces` to the old ticket) in the Backlog for the next sprint. An old ticket still In Progress is closed Done with resolution `cancelled`, one not started with `won't do`; a Done ticket stays Done. A changed object gets a new version (its version log names the request) and stays approved |
 | Declined | Refused with a reason; the raising role can dispute it: an offline review decides (it may still apply it) |
 | Stale | The target moved past the pinned version: the raising role checks it again |
 
