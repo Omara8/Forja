@@ -3,7 +3,7 @@
 #   irm https://raw.githubusercontent.com/Omara8/Forja/main/install.ps1 | iex
 #
 # Run it again to update: it replaces Forja and keeps your settings, archive and products.
-#   $env:FORJA_VERSION = "0.8.0"   a given release instead of the newest
+#   $env:FORJA_VERSION = "0.8.1"   a given release instead of the newest
 #   $env:FORJA_ROOT = "D:\forja"   another install folder
 #
 # Where Forja goes (never a hidden folder, no administrator rights): %USERPROFILE%\forja

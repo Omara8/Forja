@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.8.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.8.0">
+<img src="https://img.shields.io/badge/forja-0.8.1-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.8.1">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
 <img src="https://img.shields.io/badge/kits-6%20·%2040%20skills%20·%2059%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 40 skills, 59 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
