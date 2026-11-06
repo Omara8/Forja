@@ -11,7 +11,7 @@ Any terminal, any folder. Forja finds the product from where you are:
 | In a repo this computer mapped to a product | One line confirms it: `Use <product> (you are in its repo <repo>)?` |
 | In a product folder this computer doesn't know yet | Refused: a product comes onto this computer only through Import (a teammate exports it) |
 | In a code folder no product knows | One line offers to add it to your Forja Archive as an existing project: its name (the folder's, or one you type), the platform read from the code |
-| Anywhere else | "What are you adding?": one already on this computer, a new product, an existing project (the path of its code, then its name, for example EVC-Android-1.0; the platform read from the code, asked only when nothing is recognised), or a product a teammate exported |
+| Anywhere else | "What are you adding?": one already on this computer, a new product, an existing project (the path of its code, then its name, for example my-shop-Android-1.0; the platform read from the code, asked only when nothing is recognised), or a product a teammate exported |
 | `--product <name>` | That product |
 
 Start a run asks for the product first, then the kit and the skill. A product gets more repos from Products → the product → Add a repo.
@@ -45,7 +45,7 @@ A repo you do not work on is never asked for: each repo's folder is asked only w
 | Yes or no | Two numbered choices, each saying what it does: `1) Yes: install every agent` · `2) No: pick which ones`. Type 1 or 2. Every question in Forja is answered by number (or by typing part of an option's words). |
 | Typed or pasted text | Up to 10 lines: one Enter finishes. A paste longer than 10 lines shows a highlighted reminder under it (`▶ 42 lines received · press Enter again to finish`): press Enter once more. Blank lines inside a paste are kept. Ctrl+D (Windows: Ctrl+Z, then Enter) always finishes. Terminals that mark pastes (macOS Terminal, iTerm, Linux terminals, Windows Terminal with Git Bash or WSL) never cut a paste that has no final line break; in Git Bash's own mintty window an empty Enter finishes text. |
 | Text written for an AI | Anything you type or paste, and every document, passes the gate first: secret-looking lines are removed, and invisible characters, hidden comments, hidden Word or web text, encoded blobs, role markers or phrases that tell an AI what to do stop it. Each place is shown by line; rejecting all of it is recommended, and a rejected answer is asked again |
-| Documents | One prompt for files and text: type or drag file paths (one per line), or paste text. Enter on an empty line ends the paths; text follows the rule above. Everything is checked for secrets before any AI reads it; Forja flags pasting as CRITICAL first, so you can redact before you paste. Files that cannot be checked are left out unless you confirm each one by hand. |
+| Documents | One prompt for files and text: type file paths (one per line), or paste text. Enter on an empty line ends the paths; text follows the rule above. Everything is checked for secrets before any AI reads it; Forja flags pasting as CRITICAL first, so you can redact before you paste. Files that cannot be checked are left out unless you confirm each one by hand. |
 | Your own words (Other) | Inside a run, the answer interpreter reads what you typed against every answer so far, the product's tickets and objects and its documents. It shows how it read your words, names a conflict (for example online only earlier, offline editing now) and asks one follow-up when something is missing, at most three. Keep its answer, answer the follow-up, change your words, or keep your exact words. An answer may give each part its own choice (for example a CI tool per platform): each part is kept apart. |
 | `!` at a technical question | The recommender suggests one to three choices for this product, each with why it fits (the earlier answer it follows from) and its trade-off. It never answers for you. Not offered in requirements. |
 | `+` at a question that must meet requirements | The question names the requirement objects it must meet (`Must meet nfr-7: …`), written from earlier answers such as the technical intake; every option stays offered. `+` asks the requirement expander what those objects mean for this question: what they ask, which options meet them as they are, which need more work, and what they leave open. It never answers for you. |
@@ -90,7 +90,7 @@ foundation, change); a change ticket links `replaces` to the ticket it replaces;
 
 | Step | Why it stays outside |
 |---|---|
-| Offline review: the roles' meeting for findings left open after the loop limit and disputed change requests; each point's answer is entered in Approvals and change requests | People settle what Forja cannot |
+| Offline review (`offline-review-<n>`): the points one fix round could not settle, most severe first, and disputed change requests; each point's answer is entered in Approvals and change requests | People settle what Forja cannot |
 | A design section designed by someone outside Forja: the bundle travels by chat, email or a shared drive | The person who knows the stack designs it |
 | Committing the changes a development run made | Forja never handles git |
 | fix-bug temporary logs: you reproduce the bug on your device; Forja waits | Only you can drive the app |

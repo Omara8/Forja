@@ -19,7 +19,7 @@ Forja installs all six kits at once, plus `shared/`, the files they all use. It 
 | Linux, curl | the same command | `/opt/forja` (sudo once), and the `forja` command in `/usr/local/bin` |
 | Windows, PowerShell | `irm https://raw.githubusercontent.com/Omara8/Forja/main/install.ps1 \| iex` | `%USERPROFILE%\forja` (no administrator rights) |
 
-The installers download the release for your computer, check its SHA-256 and only then put it in place. `FORJA_VERSION=0.8.2` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
+The installers download the release for your computer, check its SHA-256 and only then put it in place. `FORJA_VERSION=0.9.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
 
 The first `forja` (or `forja setup` at any time) sets up this computer:
 

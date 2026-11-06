@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.8.2 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.9.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from one terminal at a time.
 
 ## Stages, roles and what each writes
@@ -73,9 +73,9 @@ This order is for **a new product**. **An existing project** (code your team alr
 | 4 No longer needed | Forja lists the items nothing needs any more: all their links point at retired, cancelled, superseded or out-of-scope items, or a criterion, flow or scenario points at nothing. The approving role keeps or cancels them one by one, or cancels them all |
 | 5 Approval | With no open findings, the approving role approves. The approval run freezes only what the review read, each item at that version; approving without a review is refused. The requirements sign-off records a mark per item (items written from a modernize report: by the product owner and the tech lead). Objects move to approved; planning moves the plan's tickets to To Do, the test plan its qa stories and test tasks. "Not yet" puts the items back to draft |
 
-With findings open, the fix round is offered in the same session: the skills that write the named items fix them (one fixer
-call each, no question asked again), the items that point at what changed are followed through once, and the review runs again.
-After the product's loop limit (product settings, 1 by default) a loop that left findings open leads to an offline review.
+Since 0.9.0 a review never loops and never asks per finding: minor findings are written into the tickets they are about, blockers
+and majors get one fix round inside the review, and whatever it does not settle goes to a numbered offline review (see "One loop,
+then an offline review (0.9.0)" below).
 
 Every review covers every live item of the stage. An approved stage where nothing changed since its approval has nothing to review.
 A review's temporary folder is deleted when the stage is finalized.
@@ -139,3 +139,79 @@ The tech lead runs `forja architecture design-sections`. For each platform it as
 | Built | Only when it compiles and its tests pass: Done, resolution done (or done with known problems, each offered as a bug) |
 | Disagreement | The developer raises a change request on the object (for example decision-4); a correction can be kept as a team rule for the repo |
 | Later change | An accepted change request on something a story relies on creates a new change ticket in the Backlog for the next sprint; the story stays Done, or is cancelled when it is still In Progress |
+
+## Reviews never loop (0.8.3; replaced by the one-loop rule in 0.9.0)
+
+A stage review is run once. Only two statements or items that directly contradict each other (a *conflict*) are critical: they
+go straight to an offline review between the roles concerned, with no per-finding questions and no fix round. Anything else
+(a gap, a missing test case, wording, a duplicate, an open question) is a *minor* finding: it is recorded and closed at once with
+its own decision, listed in the reports, and never blocks an approval or starts a loop. An offline review is recommended for the
+minor ones and required for the critical ones. The meeting's answer is the last word: its findings are closed once the fixing
+skills have applied it. A reviewer that did not finish is not a pass: the review says so and is run again.
+
+
+## Ticket keys, titles in reviews, and the page from the start (0.8.4)
+
+- **Ticket key.** Each product may have a short key (CLF for Campus Lost and Found), asked when the product is made (it can be skipped) and
+  changed any time in the product's menu (Ticket key). Every ticket (feature, epic, story, task, sub-task, bug, spike) is then `CLF-1`,
+  `CLF-2` ... in one sequence; its type is a field shown next to the id. Objects (needs, rules, components, tests, questions) keep their own
+  prefixes. Setting or changing the key renames every ticket id in every file of the product and keeps the old ids as aliases
+  (`product.json` `ticket_aliases`), so an old id still finds the same ticket.
+- **Reviews show titles.** The "Looks right: go on" review lists every item as `id: title`, never only ids and never cut off at a few.
+- **The product page exists from the start.** It is built when the product is made, again before each review, and after every skill.
+- **Smaller fixes.** A returned architecture bundle's own open questions are no longer mistaken for the product's questions of the same id;
+  a story blocked by unbuilt work offers to build that first; a partial team is asked about the platforms nobody covers; a run whose process
+  vanished says which step it was at and when it last saved, and a stop signal (kill, closed terminal) is recorded as such; a young Python
+  project names its interpreter before the first test run.
+- **Migration.** `forja migrate` (or opening a product) runs the `ticket-key` step: product.json gains `ticket_key` and `ticket_aliases`
+  and the page is rebuilt. Nothing else in the product changes.
+
+
+## One loop, then an offline review (0.9.0)
+
+The rule, everywhere data can clash (a review, a writing agent's change, the check after every skill):
+
+| Step | What happens |
+|---|---|
+| 1 Plain code first | The status sweep and the consistency check run after every skill and before every approval. The check reads the whole product and sorts what it finds: **blocker** (an item breaks the product's rules, or two items cannot both be true), **major** (a link to nothing or to a retired item, a foundation no ticket builds, a ticket whose parent is gone), **minor** (prose naming an id that does not exist, wording, a gap). What code settles alone is settled and is never a loop. |
+| 2 Minor points | Written into the tickets they are about (a ticket's Review notes; for an object, the tickets that reference it). They never block and never start a loop. |
+| 3 One fix round | Blockers and majors get exactly one AI fix round: in a review, the skills that write those items; for a writing agent whose change was refused or would break the product, the same agent once more from an empty sandbox, told exactly why. Every change, including the fix, is first applied to a throw-away copy of the product and checked there; a change that would add a blocker or a major is not written. |
+| 4 Settled | When the round settles everything, the run carries on from where it was: the next step, question or skill. No second review. |
+| 5 Offline review | When it does not, an offline review opens at once: `offline-review-<n>`, every point most severe first, every detail in `offline-review-<n>.md` in the product's cache (`_local/cache/products/<product id>/offline-reviews/`). Answer it in Approvals and change requests → Offline reviews → `offline-review-<n>` (or right away when a skill opened it) with one block of text: one paragraph for every point, or `1- ... / 2- ...` (`1=`, `1)`, `1.`, `1:` also work). Forja applies the answers once; nothing goes round again. A skill that opened one waits for it (paused, saying so) and carries on with the answers (`forja resume`). If even the answers cannot be written, that change is left out, the review says so, and the run carries on. |
+
+What no longer exists: the loop limit (product settings), the "fix now, then review again" offer, the "another review round"
+choice, the retry menus of a stopped step (a step that fails runs once more by itself, then stops saying why; one that stops
+twice is given the person's answer to what it says it misses, once).
+
+Other 0.9.0 changes:
+
+- **Agents get the rules the gate enforces.** Each writing agent's format file is generated from the model, and now lists, for every
+  relation it may set, the only types it may point at; when its instructions and that file disagree, the file wins.
+- **Agents see the whole product.** Next to their slice, writing agents get `PRODUCT_MAP`: every live item as id, type, status,
+  title and links.
+- **A run that does not finish leaves nothing half done.** A run that crashed, was refused by the write gate, was killed or whose
+  process vanished has its items undone: what it created is retired (a ticket: Done, won't do), what it changed gets back the
+  content it had before the run (a new version saying why). Nothing is deleted. A paused run (Ctrl+C, waiting for an answer) keeps
+  its work for `forja resume`.
+- **Documents and the product page never crash a run.** An object with empty fields is shown by its title and id; a document that
+  cannot be rebuilt keeps its last good copy and says why.
+- **A changed answer says what it affects.** Changing an earlier answer lists the items written from it, with their titles, and
+  offers one pass of the step that wrote them; open questions asked about the changed item are marked stale.
+- **Migration.** Every product from 0.7.3 on migrates straight to 0.9.0 in one jump (`one-loop`): `loop_limit` leaves
+  product.json, the ticket key fields are made sure of, and the documents, the product report and the page are rebuilt. No item
+  gets a new version.
+
+- **Starting from anywhere.** A run started in a folder no product knows never takes that folder for the project: "Which project
+  is this run for?" picks one from the Archive or asks the path of the project's code first (the starting folder is only a
+  suggestion), then the product's name (the whole product, not one repo), checked before it is offered: code already in a product
+  is used, a folder a crashed add left behind is reused, and a taken name gets the next free one as its suggestion. The detected
+  platform is confirmed, and the ticket key is offered.
+- **The Jira ticket of a development run.** Read from a file (a .txt named after the ticket with its text inside, or a PDF exported
+  from Jira; recommended) or pasted, ending with a line that has only a dot, so a paste never spills into the next question on any
+  terminal. The ticket is built as the run's own story (it moves to In Progress, then Done), the AI reads it, and later runs find it
+  by its Jira key. A run with no ticket and no documents asks what to build. In an existing project the "no requirements, design or
+  plan" question recommends continuing and is asked once per repo. `forja dev`, `forja code-velocity` and the other kit names work
+  as commands.
+- **Uninstall.** On Windows Forja's files are removed as soon as the uninstaller's window closes (they were locked while it was
+  open, so the folders stayed and `forja` still answered); anything that could not be removed is logged, and a new terminal is
+  needed afterwards.
