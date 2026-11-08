@@ -2,8 +2,9 @@
 
 [← Forja](../README.md)
 
-Forja 0.9.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
-read and written only through Forja's write gateway. Forja runs offline, on one computer, from one terminal at a time.
+Forja 0.10.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+read and written only through Forja's write gateway. Forja runs offline, on one computer: the desktop app is the main way to use it,
+the terminal (`forja`) stays for CI and scripts, and only one of them writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
 ## Stages, roles and what each writes
 
@@ -18,24 +19,44 @@ read and written only through Forja's write gateway. Forja runs offline, on one 
 
 code-insight reads existing code and writes reports only (`repos/<repo>/insight/<report>/`): it owns no object. scope-clarity writes the requirements from a modernize report; requirements written from it need the sign-off of both the product owner and the tech lead.
 
+## Product types and gates
+
+Each product has a type (`product.json` `product_type`), chosen when it is added and changed later in the app's Settings → Product
+(in the terminal: the product's Settings → Product type).
+
+| Product type | What it is for | Areas |
+|---|---|---|
+| New product (MVP / PoC / Fresh Idea) | Software built with Forja from the start | Gated (below); stage approvals |
+| Existing or live | Code your team already has, live or in development | Every area open; no stage approvals |
+
+Each of the six areas (code insight, requirements, architecture, planning, test readiness, development) is open or closed. In a new
+product:
+
+| Area | Opens when |
+|---|---|
+| Requirements | Always |
+| Code insight | The product has at least one repo |
+| Architecture | The scope is approved (the requirements stage, or every define-scope item), or a code-insight job finished. While the requirements stage itself is not approved, Forja offers to wait for it |
+| Planning | The architecture stage is fully approved |
+| Test readiness | At least one plan item (feature, epic or story) is approved |
+| Development | At least one plan item is approved; Ready to build lists approved stories only |
+
+There is no "start anyway": a closed area says what must be approved first, in the same words in the app and the terminal. Once an
+area has opened, it stays open: later items are added by the append skills through the same chain, and old items are never gated
+again.
+
+In an **existing or live** product every area is open, nothing is frozen, and there are no stage approvals. Work fills the earlier
+stages it implies instead: a ticket saved in the ticket form (or a Jira ticket a development job is given) gets its feature, the
+need it serves and the components it touches as items marked not approved yet (`approval: "pending"`, `filled_from` the ticket).
+They wait under Sign-offs on the dashboard, where the owning role approves, edits (a change request) or rejects each one. In the
+terminal, its first screen offers "Understand the code first (code-insight)", which reverse-engineers the whole codebase and takes
+time and AI usage, or "Go straight to development".
+
 | Starting point | Where it starts |
 |---|---|
-| New product | Requirements |
+| New product, no code yet | Requirements |
 | Legacy product | code-insight's reports, then requirements |
-| Existing product | Add its repos, then the first stage not approved yet (see the stage order below) |
-| One folder | The folder becomes a one-repo product; with only code (no requirements and no plan), code-velocity runs as is |
-
-| Stage | May start when |
-|---|---|
-| Requirements | Any time |
-| Architecture | Any time; while the requirements are not approved, Forja offers to wait for them first |
-| Planning | The requirements and the architecture are approved |
-| Test plan | Planning is approved |
-| Development | Planning is approved |
-
-There is no "start anyway": a stage that may not start yet names what must be approved first.
-
-This order is for **a new product**. **An existing project** (code your team already has; the mode is set once, when it is added) has no stage order and no approvals: any kit runs at any time, nothing is frozen, edits stay simple, and Approvals shows only its open questions and outdated work. Its first screen offers "Understand the code first (code-insight)", which reverse-engineers the whole codebase and takes time and AI usage, or "Go straight to development". A development run asks for the Jira ticket it is for: you name its type (feature, epic, story, task, sub-task, bug or spike) and it becomes exactly that ticket. Filling in the earlier stages of an existing project later is not offered.
+| Existing or live product | Any area; development straight away on a ticket |
 
 ## Tickets and objects
 
@@ -53,12 +74,13 @@ This order is for **a new product**. **An existing project** (code your team alr
 | Broken files | A file that breaks the model is listed as a warning when the product is opened. The product still opens; skills skip that item until it is fixed by hand |
 | Platforms | A product always has at least one platform: creating one without any is refused, and opening one without any asks for them first |
 | Change sets | A change set is validated whole and written whole, or refused whole: nothing is half-written |
-| Never deleted | An object is retired or superseded; a ticket is resolved won't do, duplicate or cancelled |
+| Never deleted | An object is retired, discarded or replaced; a ticket is resolved won't do, duplicate or cancelled |
+| Placeholder tickets | A link to a ticket id the product does not have yet makes a placeholder: only its id, type and status (`placeholder: true`). It is listed under Tickets needing details until someone fills it in |
 
 | Workflow | States |
 |---|---|
 | Tickets | Backlog → To Do (planning approval) → In Progress (a build run starts) → Done (with a resolution: done, done with known problems, won't do, duplicate, built outside Forja, cancelled); a stopped run puts back the status it found. A Done ticket is never reopened. Bugs are never frozen: edited or cancelled at any time |
-| Stage objects | draft → in review → approved (also superseded, retired); in review → draft when the review leaves findings open or the approving role answers "Not yet" |
+| Stage objects | draft → in review → approved; in review → draft when the review leaves findings open or the approving role answers "Not yet". An item a newer one replaces (link `replaces`) becomes **discarded** when nothing was built from it, **replaced** when something was; an item no longer wanted is retired |
 | Open questions | open → in review (every point answered) → done (the answer approved and folded in); paused; stale (what it asks about changed); cancelled |
 | Findings | open → settled (a decision) → closed (a fix run wrote it, or the decision accepts it) |
 | Change requests | raised → simulated → applied or declined → in offline review (disputed); withdrawn; stale |
@@ -70,7 +92,7 @@ This order is for **a new product**. **An existing project** (code your team alr
 | 1 Forja's checks | The stage gate (`model/stages.json`): for example "every component has a repository", "every story has story points and a component", "every criterion verified by a scenario covered by a qa story"; every object and ticket valid against the model; open questions raised in the stage |
 | 2 The stage-reviewer | An agent reads every live item of the stage together, against what they rely on and what relies on them |
 | 3 Findings | Each is a finding object. The owning role decides: fix it (your words are the decision the fixing skill applies), raise an open question, or accept it with a reason. Each decision is a decision object |
-| 4 No longer needed | Forja lists the items nothing needs any more: all their links point at retired, cancelled, superseded or out-of-scope items, or a criterion, flow or scenario points at nothing. The approving role keeps or cancels them one by one, or cancels them all |
+| 4 No longer needed | Forja lists the items nothing needs any more: all their links point at retired, cancelled, discarded, replaced or out-of-scope items, or a criterion, flow or scenario points at nothing. The approving role keeps or cancels them one by one, or cancels them all |
 | 5 Approval | With no open findings, the approving role approves. The approval run freezes only what the review read, each item at that version; approving without a review is refused. The requirements sign-off records a mark per item (items written from a modernize report: by the product owner and the tech lead). Objects move to approved; planning moves the plan's tickets to To Do, the test plan its qa stories and test tasks. "Not yet" puts the items back to draft |
 
 Since 0.9.0 a review never loops and never asks per finding: minor findings are written into the tickets they are about, blockers
@@ -102,25 +124,24 @@ Bugs are never frozen: they are edited or cancelled at any time. Everything an a
 ## Offline reviews
 
 A run of its own between the roles concerned, with one point per open finding (or per point of a disputed change request).
-Forja writes `generated-documents/OFFLINE-REVIEW-<run-id>.md` for the meeting; each answer recorded afterwards becomes a decision,
+Forja writes `offline-review-<n>.md` for the meeting; each answer recorded afterwards becomes a decision,
 and the fixing skills apply them once.
 
-## Runs
+## Jobs
 
-Every action is a run with its own record, `runs/<run-id>/run.json`: skill runs, approvals, offline reviews, change-request
-decisions and migrations. It holds the answers it asked (each referenced as `<run-id>#<n>`), what it read at which
-versions, its outcome, and for a build the versions it was built from and the files it wrote. Files a run keeps go in
-`runs/<run-id>/outputs/`; its working files live in `Forja-Archive/_local/tmp/` and go when it ends; leftovers from a crash are
-cleared when the product is opened. While it runs it holds one lock file in `_local/locks/`. The run menu lists running and paused
-runs only.
+Every piece of work is a job: a skill, a group check, an approval, an offline review, a change-request decision, a migration. Jobs
+are not something to manage: the dashboard shows the ones being worked on, and the product's job log (`work/jobs.jsonl`, append
+only) keeps one line for each job that ended: its number (`job-12`, never reused), what ran, when, how it ended (finished, stopped
+or failed) and why. A job's record keeps the answers it was given, what it read at which versions, and for a build the versions it
+was built from and the files it wrote (`runs/<id>/run.json`, files it keeps in `runs/<id>/outputs/`). Its working files live in
+`Forja-Archive/_local/tmp/` and go when it ends; leftovers from a crash are cleared when the product is opened.
 
-A paused development (code-velocity) run can be resumed or abandoned. Before abandoning, Forja checks that nothing relies on its
-work folder: another run or an item pointing at its files, or changes the run made that are not committed or not pushed (if
-something does, it is listed and you decide). Then Forja deletes the folder, restores the ticket status and the run ends
-"abandoned". Nothing forces a run state.
+A development job that waits can be continued or abandoned. Before abandoning, Forja checks that nothing relies on its work folder:
+another job or an item pointing at its files, or changes the job made that are not committed or not pushed (if something does, it
+is listed and you decide). Then Forja deletes the folder and restores the ticket status. Nothing forces a job's state.
 
-A run that reads an item which changes while it works is asked to update, continue on the old version, or take it offline.
-A finished build made from an older version than the current one is outdated work (computed, never written into the run).
+A job that reads an item which changes while it works is asked to update, continue on the old version, or take it offline.
+A finished build made from an older version than the current one is outdated work (computed, never written into the job).
 
 ## Handing a platform section to someone outside Forja
 
@@ -215,3 +236,38 @@ Other 0.9.0 changes:
 - **Uninstall.** On Windows Forja's files are removed as soon as the uninstaller's window closes (they were locked while it was
   open, so the folders stayed and `forja` still answered); anything that could not be removed is logged, and a new terminal is
   needed afterwards.
+
+
+## The desktop app, gates and question groups (0.10.0)
+
+- **The desktop app.** Forja is used from a desktop app (macOS Apple Silicon, Windows, Linux); the terminal stays for CI and scripts.
+  Each product is worked from its dashboard. [The desktop app](desktop-app.md) describes every screen.
+- **Product types and gates.** A new product (MVP / PoC / Fresh Idea) opens its areas through gates; an existing or live product has
+  every area open and fills earlier stages as items not approved yet (see "Product types and gates" above).
+- **Question groups.** Every question a skill asks belongs to one group (for example the technical intake's areas, one group per
+  platform area in design-sections, team-pace in estimate-delivery). The app shows a group on one page. Before anything is written,
+  the group is checked: plain code tries the answers on a throw-away copy of the product, then the group-validator agent judges what
+  code cannot (an answer that contradicts an earlier agreed detail, or one too vague to write). Each answer folds, gets one
+  follow-up question (a gap), or clashes. A clash is never accepted: you change your answer, change the earlier item (a change
+  request its owner decides), or let the agent fix it once; what that one fix does not settle becomes an offline review. A skill
+  started after its groups are answered asks none of them again.
+- **The ticket form.** A ticket as in Jira: id, type and status required (for example `CLF-109`, feature, In Progress); title,
+  description, acceptance criteria (Given … When … Then …), priority (Medium when left empty), component, links and attachments are
+  optional. A link to an id the product does not have makes a placeholder ticket.
+- **Words.** An item a newer one replaces is discarded (nothing was built from it) or replaced (something was); the link is
+  `replaces` / `replaced_by`.
+- **Jobs, not runs.** Work shows as jobs; the job log replaces the list of runs.
+- **Errors and the log.** Every failure says what failed and what to do, with a log entry for the technical detail. One log on this
+  computer (`<archive>/_local/logs/forja.jsonl`, five files of 5 MB at most), secrets removed before anything is written, never an
+  answer, a prompt or a file's contents. The app's Log screen and `forja log` read it.
+- **Security.** Forja's own files are checked at every start; hooks, MCP servers and allow rules Forja did not write are listed and
+  a Claude Code user hook stops a start; PDFs are read on this computer and pass secretgate; imports are hardened; releases are
+  pinned, signed and published only after the owner approves them.
+- **Apple Silicon only.** Intel Macs stay on 0.9.0.
+- **Migration.** Every product from 0.7.3 on migrates to 0.10.0 in one jump (`jobs-and-drafts`): items an old word marked as replaced become
+  discarded or replaced and the link becomes `replaces`; finished and stopped runs become job-log lines with the same number, and item
+  histories name jobs; the answers of a paused job become draft answers of its question groups; skill reports merge into the area
+  reports; links to ticket ids that do not exist become placeholder tickets (type and status guessed, marked so); the product type is
+  set (the product's earlier mode; else existing when it has code-insight output, or a repo with code and no requirements stage),
+  stages already approved count as passed gates, and the app asks you to confirm the type once. Open offline reviews and change
+  requests stay as they are.

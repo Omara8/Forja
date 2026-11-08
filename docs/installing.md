@@ -2,24 +2,50 @@
 
 [← Forja](../README.md)
 
-Forja installs all six kits at once, plus `shared/`, the files they all use. It comes ready to run: compiled, with its own Python 3.13, from github.com/Omara8/Forja.
+Forja comes in two parts, from the same release on github.com/Omara8/Forja: the **desktop app** (the main way to use it, with Forja's
+engine inside) and the **`forja` command** (the terminal, for CI and scripts). Each installs all six kits at once, plus `shared/`, the
+files they all use, ready to run: compiled, with its own Python 3.13. Install either or both; they work on the same products.
 
 ## Requirements
 
-- macOS (Apple Silicon or Intel), Linux (x64) or Windows (x64).
+- macOS on Apple Silicon (M1 or newer), Linux (x64) or Windows (x64). An Intel Mac stays on Forja 0.9.0: the installers, brew and
+  `forja upgrade` stop with "Forja needs an Apple Silicon Mac (M1 or newer)." and change nothing, so the 0.9.0 already installed
+  keeps working. There is no desktop app for Intel Macs.
 - At least one AI tool, signed in with a subscription or an API key: Claude Code (`claude`), OpenAI Codex (`codex`) or the GitHub Copilot command line (`copilot`).
 - Nothing else: no Python to install.
 
-## Install
+## The desktop app
+
+Download the file for your computer from the [latest release](https://github.com/Omara8/Forja/releases/latest):
+
+| Computer | File | How |
+|---|---|---|
+| macOS, Apple Silicon | `.dmg` | Open it and move Forja into Applications |
+| Windows (x64) | `.msi`, or the setup `.exe` | Run it; the setup `.exe` installs for your user only, with no administrator rights |
+| Linux (x64) | `.AppImage`, or `.deb` | The `.AppImage` runs as it is once made runnable (`chmod +x` followed by its full path); the `.deb` installs with your package manager, for example `sudo apt install` followed by the file's full path |
+
+Forja is built on free tiers only, so the macOS and Windows apps are not signed by Apple or Microsoft. Every release file is signed
+with Sigstore instead (its `.sigstore.json` and `.sha256` sit next to it on the release). The first launch asks once:
+
+| Computer | What you see | What to do |
+|---|---|---|
+| macOS | "Forja" cannot be opened because Apple cannot check it | 1. Open System Settings → Privacy & Security. 2. Scroll to the message about Forja and choose Open Anyway. 3. Confirm with your password. macOS remembers it |
+| macOS | "Forja" is damaged and cannot be opened | The download kept a quarantine mark. Type `xattr -dr com.apple.quarantine /Applications/Forja.app` in Terminal once, then open it again |
+| Windows | Windows protected your PC (SmartScreen), publisher unknown | 1. Choose More info. 2. Choose Run anyway. Windows remembers it for this file |
+
+The app checks its engine before it starts it: the engine's SHA-256 must match the value built into the app, else it refuses to
+start it. Settings → About shows the engine's version and checks for an update; an update is a new release of the app.
+
+## The `forja` command
 
 | Computer | Command | Forja goes in |
 |---|---|---|
-| macOS or Linux, brew | `brew tap Omara8/forja https://github.com/Omara8/Forja && brew install omara8/forja/forja` | brew's own folder (`/opt/homebrew`, `/usr/local`, or `/home/linuxbrew/.linuxbrew` on Linux) |
-| macOS, curl | `curl -fsSL https://raw.githubusercontent.com/Omara8/Forja/main/install.sh \| sh` | `~/forja` (no administrator password) |
+| macOS or Linux, brew | `brew tap Omara8/forja https://github.com/Omara8/Forja && brew install omara8/forja/forja` | brew's own folder (`/opt/homebrew` on macOS, `/home/linuxbrew/.linuxbrew` on Linux) |
+| macOS, curl | `curl -fsSL https://github.com/Omara8/Forja/releases/latest/download/install.sh \| sh` | `~/forja` (no administrator password) |
 | Linux, curl | the same command | `/opt/forja` (sudo once), and the `forja` command in `/usr/local/bin` |
-| Windows, PowerShell | `irm https://raw.githubusercontent.com/Omara8/Forja/main/install.ps1 \| iex` | `%USERPROFILE%\forja` (no administrator rights) |
+| Windows, PowerShell | `irm https://github.com/Omara8/Forja/releases/latest/download/install.ps1 \| iex` | `%USERPROFILE%\forja` (no administrator rights) |
 
-The installers download the release for your computer, check its SHA-256 and only then put it in place. `FORJA_VERSION=0.9.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
+The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.10.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
 
 The first `forja` (or `forja setup` at any time) sets up this computer:
 
@@ -38,7 +64,7 @@ The first `forja` (or `forja setup` at any time) sets up this computer:
 |---|---|
 | Forja itself | `<install folder>/bin` (the `forja` command), `python/` (Python 3.13), `app/` (Forja: compiled modules, encrypted prompts, `BUILD.json`, `IT-NOTE.md`) |
 | Your settings | `~/forja/config` (`%USERPROFILE%\forja\config`): `forja.json`, `models.json`. Kept on every update |
-| This computer's own state | `Forja-Archive/_local/`: `paths.json` (each product's and repo's folder here), `locks/` (one file per running run), `tmp/` (runs' working files, deleted when each run ends), `cache/`, `kits/<kit>/` |
+| This computer's own state | `Forja-Archive/_local/`: `paths.json` (each product's and repo's folder here), `locks/` (one file per running job), `tmp/` (jobs' working files, deleted when each job ends), `logs/` (Forja's one log: `forja.jsonl`, five files of 5 MB at most, secrets removed), `cache/`, `kits/<kit>/` |
 | Earlier archives | `Forja-Archive/_old_archive/` |
 | Products made before 0.7.3 | `Forja-Archive/legacy/<date>/`, moved whole and untouched |
 | Products | `Forja-Archive/<product>/` by default, or another folder on this computer (Products → Move) |
@@ -57,7 +83,7 @@ No Forja file is ever run from a hidden folder. The one hidden folder Forja is e
 
 An update replaces `app/`, `python/` and `bin/` only. On its next start, Forja points its hooks at the new version by itself.
 
-One Forja version is installed per computer. Installing a newer version migrates every product this computer knows to it before
+The desktop app updates as an app (Settings → About → Check for an update). One Forja version is installed per computer. Installing a newer version migrates every product this computer knows to it before
 anything else runs: forced, no opt-out, with progress per product (`forja migrate` runs the same step by hand). A product whose
 folder isn't there is migrated when it is next picked. Products made before 0.7.3 are not migrated: on install, on update and by
 `forja migrate`, the ones in the archive are moved whole, untouched, into `<archive>/legacy/<date>/`, and this computer forgets
@@ -77,10 +103,13 @@ or the archive: they stay where they are, and a later install picks them up agai
 
 | | |
 |---|---|
-| Signing | Every download has a SHA-256 the installers check, and a Sigstore (cosign) signature from Forja's release workflow. macOS: every native file is signed ad hoc (no Apple Developer ID). Windows: `python.exe` is signed by the Python Software Foundation; Forja's own `.pyd` files are not signed |
+| Signing | Every download has a SHA-256 the installers check, and a Sigstore (cosign) signature from Forja's release workflow. macOS: every native file is signed ad hoc (no Apple Developer ID); the desktop app is not notarised. Windows: `python.exe` is signed by the Python Software Foundation; Forja's own `.pyd` files and the desktop app's installers are not signed (SmartScreen shows an unknown publisher) |
 | What runs | `bin/forja` → `python/` → `app/core/forja_main.py` (a one-line loader) → Forja's compiled modules. No `.py` source and no prompt in plain text ships |
-| Fingerprints | `app/IT-NOTE.md` lists the SHA-256 of every file; `forja doctor` compares them |
-| Network | Forja's own code makes no network calls. `forja upgrade` runs brew or the installer, which download from github.com |
+| Fingerprints | `app/BUILD.json` lists the SHA-256 of every shipped file and is checked at every start: a changed install stops with a plain message (only `forja doctor`, `forja upgrade` and `forja uninstall` still run). `app/IT-NOTE.md` lists them for people |
+| Desktop app | Tauri 2 with plain HTML, CSS and JavaScript. Its content security policy allows only its own files and no inline script; it may call only its engine and the open and save dialogs. The engine runs as its sidecar over standard input and output, never a network port, after its SHA-256 is checked |
+| Hooks Forja did not write | `forja doctor` and the app's Settings → Hooks and servers list the hooks, MCP servers and allow rules in Claude Code's, Codex's and Copilot's user settings that Forja did not write; Forja warns at start when that list changed, and a Claude Code user hook Forja did not write stops a start |
+| Releases | Built by the private repo's workflow with every action pinned to a commit, read-only permissions except the publishing job, build tools pinned by version and SHA-256; published as a draft Release and a pull request on the public repo that the owner approves before anything is published |
+| Network | Forja's own code makes no network calls. `forja upgrade` runs brew or the installer, which download from github.com; the desktop app's update check reads the release's `latest.json` on github.com |
 
 ## Forja 0.6.4 and earlier (from a zip)
 

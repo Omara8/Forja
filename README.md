@@ -3,17 +3,17 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.9.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.9.0">
+<img src="https://img.shields.io/badge/forja-0.10.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.10.0">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
-<img src="https://img.shields.io/badge/kits-6%20·%2040%20skills%20·%2059%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 40 skills, 59 agents">
+<img src="https://img.shields.io/badge/kits-6%20·%2040%20skills%20·%2060%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 40 skills, 60 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
 <img src="https://img.shields.io/badge/macOS%20·%20Linux%20·%20Windows-69727f?style=flat-square&labelColor=20242b" alt="macOS, Linux and Windows">
 <img src="https://img.shields.io/badge/license-proprietary-69727f?style=flat-square&labelColor=20242b" alt="Proprietary license">
 </p>
 
-<p align="center"><b><a href="#install">Install</a> · <a href="#update-and-uninstall">Update</a> · <a href="#how-a-run-works">How a run works</a> · <a href="#the-lifecycle">The lifecycle</a> · <a href="#kits-and-skills">Kits and skills</a> · <a href="#safety">Safety</a> · <a href="#commands">Commands</a></b></p>
+<p align="center"><b><a href="#install">Install</a> · <a href="#update-and-uninstall">Update</a> · <a href="#the-desktop-app">The desktop app</a> · <a href="#how-a-run-works">How a run works</a> · <a href="#the-lifecycle">The lifecycle</a> · <a href="#kits-and-skills">Kits and skills</a> · <a href="#safety">Safety</a> · <a href="#commands">Commands</a></b></p>
 
-Forja runs AI kits from one terminal command: understanding a legacy system, requirements, architecture, delivery planning, test preparation and development. You answer the questions; agents do the work in the background with Claude Code, Codex or GitHub Copilot, on your subscription or an API key. Every kit writes into one product: tickets for the work, objects for every fact, each field owned by one role. Secrets and hidden AI instructions are stopped before any agent reads a thing, and every agent is fenced to its own step. Forja runs on one computer, from one terminal, offline.
+Forja runs AI kits from one desktop app (and from the terminal, for scripts and CI): understanding a legacy system, requirements, architecture, delivery planning, test preparation and development. Each product is worked from its dashboard: what needs you, the areas you can work in, the questions to answer, what to review and what is ready to build. You answer the questions; agents do the work in the background with Claude Code, Codex or GitHub Copilot, on your subscription or an API key. Every kit writes into one product: tickets for the work, objects for every fact, each field owned by one role. Secrets and hidden AI instructions are stopped before any agent reads a thing, and every agent is fenced to its own step. Forja runs on one computer, offline.
 
 > 0.7.x is an experimental line: Forja installed with brew, curl or PowerShell, compiled, with its prompts encrypted.
 
@@ -22,10 +22,32 @@ Forja runs AI kits from one terminal command: understanding a legacy system, req
 | Computer | Command |
 |---|---|
 | macOS or Linux, brew | `brew tap Omara8/forja https://github.com/Omara8/Forja && brew install omara8/forja/forja` |
-| macOS or Linux, curl | `curl -fsSL https://raw.githubusercontent.com/Omara8/Forja/main/install.sh \| sh` |
-| Windows, PowerShell | `irm https://raw.githubusercontent.com/Omara8/Forja/main/install.ps1 \| iex` |
+| macOS or Linux, curl | `curl -fsSL https://github.com/Omara8/Forja/releases/latest/download/install.sh \| sh` |
+| Windows, PowerShell | `irm https://github.com/Omara8/Forja/releases/latest/download/install.ps1 \| iex` |
 
-Then type `forja`. The first run sets up this computer: where your archive goes and which AI tools to use (`forja setup` runs it again).
+The commands above install the `forja` command (for the terminal, scripts and CI). The installers are files of each release (the
+commands take the newest one). The desktop app, the main way to use Forja, is a separate download from the
+[latest release](https://github.com/Omara8/Forja/releases/latest), with Forja's engine inside it:
+
+| Computer | Desktop app file |
+|---|---|
+| macOS, Apple Silicon (M1 or newer) | `.dmg` |
+| Windows (x64) | `.msi`, or the setup `.exe` (installs for your user only) |
+| Linux (x64) | `.AppImage`, or `.deb` |
+
+Forja is built on free tiers only, so the macOS and Windows apps are not signed by Apple or Microsoft (every release file is
+signed with Sigstore instead). The first launch asks once:
+
+| Computer | First launch |
+|---|---|
+| macOS | Open Forja from Applications. macOS says it cannot check the developer: open System Settings → Privacy & Security, scroll to the message about Forja and choose Open Anyway, then confirm. If macOS says Forja "is damaged", type `xattr -dr com.apple.quarantine /Applications/Forja.app` in Terminal once, then open it again |
+| Windows | SmartScreen shows "Windows protected your PC" with an unknown publisher: choose More info, then Run anyway |
+| Linux | An `.AppImage` needs to be made runnable once: `chmod +x` followed by its full path |
+
+macOS: Apple Silicon only. An Intel Mac stays on Forja 0.9.0: the installers, brew and `forja upgrade` stop with "Forja needs an
+Apple Silicon Mac (M1 or newer)." and change nothing.
+
+For the terminal, type `forja`. The first run sets up this computer: where your archive goes and which AI tools to use (`forja setup` runs it again).
 
 | You need | |
 |---|---|
@@ -38,7 +60,7 @@ Then type `forja`. The first run sets up this computer: where your archive goes 
 | `~/forja/config` | Your settings, kept on every update |
 | `Desktop/Forja-Archive` by default, on this computer | Your products, runs and this computer's caches. Uninstalling never deletes them |
 
-Nothing is installed in a hidden folder, except brew's own on Linux (`/home/linuxbrew/.linuxbrew`). Every download is checked against its SHA-256 before anything is replaced. More: [installing, updating, uninstalling](docs/installing.md).
+Nothing is installed in a hidden folder, except brew's own on Linux (`/home/linuxbrew/.linuxbrew`). Every download is checked before anything is replaced: its Sigstore signature when [cosign](https://docs.sigstore.dev) is installed (signed by Forja's release workflow), else its SHA-256, with a warning that the signature was not checked. More: [installing, updating, uninstalling](docs/installing.md).
 
 ## Update and uninstall
 
@@ -52,6 +74,30 @@ An update keeps your settings, archive and products. Products made before 0.7.3 
 
 <picture><source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/terminal-day.svg"><img src="docs/assets/readme/terminal-night.svg" alt="A Forja run in the terminal: Forja confirms the repo, checks it for secrets, applies the project's own skills, runs the agents with their cost, asks you to approve the plan, then reports the result. You review and commit the changes yourself."></picture>
 
+## The desktop app
+
+The app is the main way to use Forja; the terminal (`forja`) stays for CI and scripts and does the same things as numbered menus.
+Both run the same engine and share the same products: while one of them writes a product, the other can only read it.
+
+| Screen | What it shows |
+|---|---|
+| **Home** | Every product on this computer (type, Forja version, platforms, ticket key, busy or idle), what is being worked on, and what waits for you |
+| **New product** | One page: new product or existing software, where its code is, its name and ticket key, its platforms and their repos |
+| **A product's dashboard** | Needs you (chips: clashes, offline reviews, sign-offs, open questions, change requests, and tickets needing details, off by default), Areas with their gates, To answer, To review, Being worked, Ready to build, Recently changed. Every open item shows in one section only |
+| **Questions** | A skill's questions in groups, one group on one page; the group is checked before anything is written |
+| **Ticket form** | A ticket as in Jira: id, type and status required; links to tickets this product does not have yet become placeholders |
+| **Guide** | What Forja can do, read from the code: the kits and their skills, when each area opens for each product type, and four paths (a new idea, MVP or PoC; an existing product straight to development; an existing product straight to a test plan; legacy code understood first). With a product open, which of its areas are open now. The terminal shows the same under How to use Forja |
+| **Ask about this product** | A side panel: a question about the open product, answered from its own items with their ids cited |
+| **Jobs and the Log** | Every piece of work is a job in the product's job log; one log on this computer holds the technical detail, with secrets removed |
+| **Settings** | AI tools and accounts, Models, Product (each product's type: new or existing or live), This machine (archive folder, theme), Import / Export, Hooks and servers (what Forja did not write in your AI tools' settings), About (versions, update check) |
+
+| Product type | Areas |
+|---|---|
+| **New product (MVP / PoC / Fresh Idea)** | Gated: requirements always; code insight once it has a repo; architecture once the scope is approved (or code insight finished); planning once the architecture is fully approved; test readiness and development once at least one plan item (feature, epic or story) is approved; Ready to build lists approved stories only |
+| **Existing or live** | Every area open. Work done there fills the earlier stages it implies (a ticket's feature, the need it serves, the components it touches) as items marked not approved yet, waiting under Sign-offs |
+
+A closed area says why, in the same words in the app and the terminal. More: [the desktop app](docs/desktop-app.md).
+
 ## How a run works
 
 <picture><source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/runflow-day.svg"><img src="docs/assets/readme/runflow-night.svg" alt="Six steps: you start one command in any folder; secretgate finds and fences secrets; the gate stops hidden AI instructions in anything given to the agents; the kit's scripts gather facts, checks and plans; agents run as one fresh call per step, each writing only its own sandbox; the product keeps the tickets, the objects, the reports and the run record. Only the agents spend AI tokens."></picture>
@@ -64,9 +110,9 @@ An update keeps your settings, archive and products. Products made before 0.7.3 
 | **Nothing assumed** | No technical question has a default. Each shows the recommended option with its reason; you choose |
 | **One way to answer** | Pick by number; every choice ends with Other (type your own): the answer interpreter reads your words against everything answered so far and asks a follow-up until the answer is solid. `?` explains any question; `!` at a technical question recommends one to three choices for this product (you still choose); `+` explains the requirement objects a question must meet |
 | **Document library** | A new run first asks for the product's documents (requirements, designs, screenshots, exports): read once, secrets removed first; each later question they answer shows the quote and the file, for you to confirm or edit |
-| **Exit any time** | Every numbered question ends with Exit (saved); `forja resume` continues at the same question |
-| **Runs are the history** | Each run keeps its record in `runs/<run-id>/run.json`: every question with its raw answer (`<run-id>#<n>`), the versions it read, its outcome; `outputs/` keeps what the run produced. Working files live in `_local/tmp/` and go when the run ends; one lock per run in `_local/locks/` |
-| **Runs named by ticket** | A run's name is how resume and reports find it (`ABC-200`) |
+| **Exit any time** | Every numbered question ends with Exit (saved); the job waits under Being worked on the dashboard (`forja resume` in the terminal) and continues at the same question |
+| **Jobs** | Every piece of work (a skill, a group check, an approval, a migration) is a job, numbered per product and never reused (`job-12`). The product's job log (`work/jobs.jsonl`) keeps one line per job that ended: what ran, how it ended and why. A job's record keeps every question with its raw answer, the versions it read and what it produced (`runs/<id>/`). Working files live in `_local/tmp/` and go when the job ends |
+| **Jobs named by ticket** | In the terminal, `--name ABC-200` names a job so `forja resume` and the reports find it |
 
 More: [running Forja](docs/running.md).
 
@@ -81,7 +127,7 @@ More: [running Forja](docs/running.md).
 | Test plan | test-readiness | `forja test-plan` | QA lead | review-test-coverage: TEST-PLAN.md, COVERAGE.md |
 | Development | code-velocity | `forja development` | `<platform>` developer | None: tickets move through their workflow (Backlog → To Do → In Progress → Done) |
 
-Two modes, set once when the product is added. **A new product**: stages run in order, and there is no "start anyway": requirements start any time; architecture starts any time, but Forja offers to wait for the requirements while they are not approved; planning needs the requirements and the architecture approved; the test plan and development need planning approved. **An existing project** (code your team already has): any kit runs at any time, there are no approvals, and the first screen offers code-insight (it reverse-engineers the whole codebase: time and AI usage) or development straight away; a Jira ticket you paste becomes that same ticket type. Each kit's skills and the role each skill acts for are in its README. More: [the lifecycle](docs/lifecycle.md).
+Two product types, chosen when the product is added and changed later in Settings. **A new product (MVP / PoC / Fresh Idea)** opens its areas through gates, and there is no "start anyway": requirements start any time; code insight once the product has a repo; architecture once the scope is approved (the requirements, or every define-scope item) or a code-insight job finished, and while the requirements stage itself is not approved Forja offers to wait for it; planning once the architecture is fully approved; the test plan and development once at least one plan item (feature, epic or story) is approved. **An existing or live product** (code your team already has): every area is open, there are no stage approvals, and the terminal's first screen offers code-insight (it reverse-engineers the whole codebase: time and AI usage) or development straight away. A ticket you enter there (the ticket form, or a Jira ticket you paste) becomes that same ticket type, and the feature, need and components it implies are filled in as items not approved yet, waiting under Sign-offs. Each kit's skills and the role each skill acts for are in its README. More: [the lifecycle](docs/lifecycle.md).
 
 ## Products, tickets and objects
 
@@ -97,10 +143,10 @@ Two modes, set once when the product is added. **A new product**: stages run in 
 | **Write gateway** | The one function every write goes through. It checks the model (who may write which field, allowed status moves, field shapes, links), writes all or nothing, and adds a line to each changed item's version log |
 | **Platforms** | A product always has at least one platform: creating one without any is refused, and opening one without any asks for them first |
 | **Generated documents** | `generated-documents/`: SCOPE-DRAFT.md, APPROVED-SCOPE.md, HIGH-LEVEL-DESIGN.md, PLAN.md, TEST-PLAN.md, COVERAGE.md and the reports, rebuilt from the objects and tickets; never read back |
-| **On pick** | Picking a product checks its version (migrating it when needed), checks every file against the model (a file that breaks it is listed as a warning: the product still opens, and skills skip that item until you fix it by hand), marks stale questions, rebuilds previews, clears temporary folders a crash left, pauses runs that stopped, and warns when another Forja has it open |
+| **On open** | Opening a product checks its version (migrating it when needed: the app shows the steps and their time first), checks every file against the model (a file that breaks it is listed as a warning: the product still opens, and skills skip that item until you fix it by hand), marks stale questions, rebuilds previews, clears temporary folders a crash left, stops jobs whose process is gone, and says when the other front end is writing it |
 | **Products before 0.7.3** | Moved whole, untouched, into `<archive>/legacy/<date>/` on install, on update and by `forja migrate`. One kept outside the archive is only forgotten by this computer; its folder stays where it is |
-| **Mode** | Set once when the product is added: a new product (stage order and approvals) or an existing project (any kit at any time, no approvals) |
-| **Export and import** | No sync: a teammate gets a product only through Forja. Products → the product → Export it writes one `<name>-<date>.forja-product.zip` (its record, never your code, repo paths, generated documents or library); they add it with Products → Add a product → A product a teammate exported. A product their computer already has is refused. Before an export Forja lists what goes in (source-documents/ can be left out); before an import it shows what the file holds, checks every text in it for hidden instructions and every item against the model |
+| **Product type** | `product.json` `product_type`: new (gated areas, stage approvals) or existing (every area open, reverse-filled items to sign off). Set when the product is added; changed in the app's Settings → Product, or the terminal's product Settings → Product type. A migrated product shows its type once on first open for you to confirm |
+| **Export and import** | No sync: a teammate gets a product only through Forja. In the app: Settings → Import / Export. In the terminal: the product's Settings → Export it, and Products → Add a product → A product a teammate exported. An export is one zip file (the app names it `<name>.forja`, the terminal `<name>-<date>.forja-product.zip`) holding the product's record, its documents and reports; never your code, this computer's repo paths, settings or AI accounts, nor the library cache (rebuilt). An import takes that file or a product folder in two steps: Forja first reads it and shows what it holds, what the gate found (text written for an AI, shown before anything is added) and which files it will build again; nothing is added until you say so. Pages, reports and generated documents are never taken from the file: they are rebuilt from the imported data. An import refuses a product the computer already has, any path outside the product folder, links, files over 50 MB (100 MB in all) and items that break the model; an older product migrates when you open it. The product stays marked as from outside until you mark it reviewed |
 | **Remove** | Products → Remove forgets a product on this computer; its folder stays. Uninstalling Forja never deletes products |
 
 ## Reviews, approvals and change requests
@@ -108,7 +154,7 @@ Two modes, set once when the product is added. **A new product**: stages run in 
 | | |
 |---|---|
 | **Review** | Each stage's review skill runs the stage-reviewer over every live item of the stage: findings (gap, conflict, duplicate, coverage, quality), each open, settled or closed. Minor findings go into the tickets they are about; blockers and majors get one fix round, and what it does not settle goes to a numbered offline review (0.9.0) |
-| **No longer needed** | After the review, Forja lists the items nothing needs any more (all their links point at retired, cancelled, superseded or out-of-scope items, or a criterion, flow or scenario points at nothing). The approving role keeps or cancels them one by one, or cancels them all |
+| **No longer needed** | After the review, Forja lists the items nothing needs any more (all their links point at retired, cancelled, discarded, replaced or out-of-scope items, or a criterion, flow or scenario points at nothing). The approving role keeps or cancels them one by one, or cancels them all |
 | **Approval** | The approving role approves the stage: the approval freezes only what the review read, each item at its version (requirements also keep the product owner's mark per item). Approving without a review is refused; "Not yet" puts the items back to draft. Requirements written from a modernize report need the sign-off of both the product owner and the tech lead. States: draft, in review, approved. An approved object is never overwritten |
 | **Changing approved work** | When nothing built from it has started (neither it nor anything under it is In Progress or Done: feature > epic > story > sub-task, or for a requirement object the tickets built from it), Forja simulates the change and shows a short summary: each field old → new, and what it touches. You accept (a new version; the stage stays approved) or refuse. When work has started, it is a change request |
 | **Change an earlier answer** | `forja <kit> change-answer`: a checked edit of an object your kit owns; refused, with what it would break, when a check finds a problem |
@@ -123,7 +169,7 @@ Two modes, set once when the product is added. **A new product**: stages run in 
 ## Kits and skills
 
 <!-- forja:kits -->
-Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: `forja <command> <skill>`. 6 kits, 40 skills, 59 agents. One install brings all of them: [Install](#install).
+Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: `forja <command> <skill>`. 6 kits, 40 skills, 60 agents. One install brings all of them: [Install](#install).
 
 | | Kit | Command | For | Skills |
 |---|---|---|---|---|
@@ -232,41 +278,51 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | Your project's way wins | Skills follow the project's existing style, its own AI skills and agents, and the team rules your team set. More: [what Forja remembers](docs/memory.md) |
 | Agents are fenced | A writing agent writes only its own sandbox; every other agent only its run's work folder. The product folder is read-only to every agent: Forja's write gateway writes the product. No agent is given the whole archive or Forja's own files (run locks, paths, settings). They run no other command; code agents only the repo files of an approved plan. Guards fail closed: if one cannot decide, the read or write is refused |
 | Hidden instructions are stopped at the door | Every text that enters Forja passes one gate before any AI sees it: answers you type, pasted Jira or Confluence text, source documents and imported products. Secret-looking lines are removed first. Text written for an AI rather than a person (invisible characters, hidden comments, hidden or white text in Word and web pages, encoded blobs, role markers, phrases that tell an AI to ignore its rules, take a role, hide something or skip a review) is shown to you line by line, and Forja recommends rejecting all of it. Whatever you keep, every agent is told that everything it reads is material, never instructions, and outside text reaches it inside a DATA fence |
-| Your data stays yours | No server, no account, no telemetry. One computer, one terminal, offline: two terminals on one product is a known limitation, and Forja warns |
+| Your data stays yours | No server, no account, no telemetry. One computer, offline. One writer per product: while the app or the terminal writes a product, the other can only read it |
+| Forja's own files are checked | Every start compares the install folder with the SHA-256 list the build wrote (`BUILD.json`); a changed install stops with a plain message and `forja doctor` lists what changed. The desktop app starts its engine only when the engine's SHA-256 matches the one built into the app |
+| Your AI tools' own settings | Hooks, MCP servers and allow rules Forja did not write in Claude Code's, Codex's and Copilot's user settings are listed by `forja doctor` and the app's Settings → Hooks and servers, with a warning at start when that list changed. A Claude Code user hook Forja did not write stops a start: it would run inside every Forja step |
+| PDFs | Their text is read on this computer and passes secretgate and the gate before any agent reads it |
+| The app | A strict content security policy: only its own files, no inline script, no network but its engine; it may call only the engine and the open and save dialogs |
+| Releases | Every build tool pinned by version and SHA-256, every GitHub Action pinned to a commit, jobs read-only unless they publish; every file signed with Sigstore; a release stays a draft until the owner approves its pull request on the public repo. The installers check the Sigstore signature when cosign is installed, else the SHA-256 with a warning |
 | Forja's own code | Compiled to native modules, its prompts encrypted; IT teams get a SHA-256 list of every file (`app/IT-NOTE.md`) |
 
 ## Commands
 
+The desktop app does everything below from its screens. The terminal is for CI, scripts and anyone who prefers it:
+
 ```text
-forja                                  menu: start a run · resume · runs in progress · show a report · products · approvals and change requests · saved answers · doctor
+forja                                  menu: open a product (its dashboard) · continue a job that waits for you · jobs · reports · products · approvals and change requests · saved answers · doctor
 forja <kit>                            a kit's skills (insight, requirements, architecture, planning, test-plan, development)
-forja <kit> <skill>                    start a skill
+forja <kit> <skill>                    start a skill (refused with the gate's reason when its area is closed)
       --product <name>                 which product (skips the question)
       --repo <name>                    which repo of the product
-      --name <run>                     the run's name (a ticket number is best)
-      --tool claude|codex|copilot      the AI tool for this run (default: the one set at install)
+      --name <job>                     the job's name (a ticket number is best)
+      --tool claude|codex|copilot      the AI tool for this job (default: the one set at install)
       --parallel N                     agents at once (default 3)
-forja <kit> change-answer              change an earlier answer: a checked edit of one object
-forja resume [run]                     continue a stopped run (a paused development run can also be abandoned)
-forja status                           runs in progress and where each one waits
-forja show <run>                       a run's report, in the pager
-forja products [add [folder] | move | remove]   the products this computer knows: add (new, existing project, or a teammate's export), export from a product's menu (remove forgets; the folder stays)
+forja <kit> change-answer              change an earlier answer: a checked edit of one item
+forja resume [job]                     continue a job that waits for you (a paused development job can also be abandoned)
+forja status                           the jobs being worked on, and where each one waits
+forja jobs                             the job log: every job of every product
+forja show <job>                       a job's report, in the pager
+forja log [--level L] [--job J] [id]   Forja's log on this computer, newest first; one entry whole with its id
+forja products [add [folder] | move | remove]   the products this computer knows (remove forgets; the folder stays)
 forja repos path                       a repo's folder on this computer
 forja approvals                        approvals, change requests, offline reviews, open questions
 forja spike                            start a spike ticket: research within its time box
-forja migrate                          move products made before 0.7.3 into <archive>/legacy/<date>/; kept for later migrations (the installer runs it)
+forja migrate                          migrate every product to the installed version (the installer runs it; no opt-out)
 forja report                           the product report (PRODUCT-REPORT.md): every kit and skill, every question and answer
 forja report --kit <kit>               one kit's report (reports/KIT-<kit>.md): its skills, its stage, what comes next
-forja report --skill <skill>           one skill's report (reports/SKILL-<skill>.md): every run of it
-forja doctor                           Python, AI tools, sign-in, hooks and file fingerprints
+forja report --skill <skill>           one skill's report (reports/SKILL-<skill>.md): every job of it
+forja doctor                           Python, AI tools, sign-in, Forja's own files, hooks Forja did not write
 forja version                          the installed version
-forja setup                            set up this computer again: the archive, the AI tools, the hooks
-forja upgrade                          update Forja the way it was installed (brew, curl or PowerShell)
-forja uninstall                        remove Forja; your products and the archive stay
+forja setup | upgrade | uninstall      set up again, update, or remove Forja (uninstall never deletes products)
+forja serve --json                     the engine of the desktop app: JSON lines on stdin and stdout (the app starts it)
 ```
+
+A failure in the terminal prints what failed, what to do, and `Details: forja log <id>` for the technical detail.
 
 Which model each agent uses: [models](docs/models.md).
 
 <p align="center"><picture><source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/heatband-day.svg"><img src="docs/assets/readme/heatband-night.svg" width="100%" alt=""></picture></p>
 
-<p align="center"><picture><source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/mark-day.svg"><img src="docs/assets/readme/mark-night.svg" width="160" alt="Forja"></picture><br><sub>Proprietary license · nothing leaves your machine except your AI tool's own calls</sub></p>
+<p align="center"><picture><source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/mark-day.svg"><img src="docs/assets/readme/mark-night.svg" width="160" alt="Forja"></picture><br><sub>Proprietary · Python standard library only · nothing leaves your machine except your AI tool's own calls</sub></p>

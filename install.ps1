@@ -1,9 +1,11 @@
 # Forja installer and updater for Windows (PowerShell 5.1 or later).
 #
-#   irm https://raw.githubusercontent.com/Omara8/Forja/main/install.ps1 | iex
+#   irm https://github.com/Omara8/Forja/releases/latest/download/install.ps1 | iex
 #
 # Run it again to update: it replaces Forja and keeps your settings, archive and products.
-#   $env:FORJA_VERSION = "0.9.0"   a given release instead of the newest
+# Every download is checked before anything is replaced: with cosign installed, its Sigstore signature (made by Forja's
+# release workflow on GitHub); without cosign, its SHA-256 only, and the installer says the signature was not checked.
+#   $env:FORJA_VERSION = "0.10.0"   a given release instead of the newest
 #   $env:FORJA_ROOT = "D:\forja"   another install folder
 #
 # Where Forja goes (never a hidden folder, no administrator rights): %USERPROFILE%\forja
@@ -42,6 +44,28 @@ $Want = ((Get-Content (Join-Path $Dl "$Asset.sha256") -Raw).Trim() -split "\s+")
 $Got = (Get-FileHash -Algorithm SHA256 (Join-Path $Dl $Asset)).Hash.ToLower()
 if (-not $Want -or $Want -ne $Got) { Remove-Item -Recurse -Force $Dl; Fail "checksum mismatch for $Asset (expected $Want, got $Got): nothing was changed" }
 Write-Host "Checksum OK ($Got)"
+# The signer: Forja's release workflow on main, signed through GitHub's own sign-in for workflows (Sigstore, keyless)
+$Signer = '^https://github\.com/Omara8/Forja-Private/\.github/workflows/release\.yml@refs/heads/main$'
+$Issuer = 'https://token.actions.githubusercontent.com'
+$Cosign = Get-Command cosign -ErrorAction SilentlyContinue
+if ($Cosign) {
+    try { Invoke-WebRequest -UseBasicParsing -Uri "$Base/$Asset.sigstore.json" -OutFile (Join-Path $Dl "$Asset.sigstore.json") }
+    catch { Remove-Item -Recurse -Force $Dl; Fail "could not download the signature $Base/$Asset.sigstore.json: nothing was changed" }
+    $Prev = $ErrorActionPreference; $ErrorActionPreference = "Continue"     # cosign writes to stderr; PowerShell 5.1 would stop on it
+    $Major = ((& $Cosign.Source version 2>&1) | Out-String) -replace '(?s).*GitVersion:\s*v?(\d+).*', '$1'
+    $Old = if ($Major -eq "2") { @("--new-bundle-format") } else { @() }   # cosign 2 reads this signature format only when told to
+    $null = & $Cosign.Source verify-blob @Old --bundle (Join-Path $Dl "$Asset.sigstore.json") --certificate-identity-regexp $Signer `
+        --certificate-oidc-issuer $Issuer (Join-Path $Dl $Asset) 2>&1
+    $Rc = $LASTEXITCODE
+    $ErrorActionPreference = $Prev
+    if ($Rc -ne 0) {
+        Remove-Item -Recurse -Force $Dl
+        Fail "the signature of $Asset does not check out (it was not signed by Forja's release workflow): nothing was changed"
+    }
+    Write-Host "Signature OK (signed by Forja's release workflow)"
+} else {
+    Write-Host "WARNING: the signature was not checked (cosign is not installed); only the checksum was. To check it next time, install cosign (docs.sigstore.dev) and run this installer again." -ForegroundColor Yellow
+}
 
 # 3 unpack next to the current install, then swap (settings in config\ are never touched)
 $New = Join-Path $Root "_new"

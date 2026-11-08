@@ -1,0 +1,45 @@
+# Publishes the draft Release that Forja's release workflow made, when its pull request (development -> main, opened by the
+# Forja release GitHub App and carrying Formula/forja.rb) is merged. The version comes from the merged formula; the formula's
+# checksums must match the draft's .sha256 files. Only the built-in GITHUB_TOKEN, with contents: write; no stored secret.
+name: publish
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'development' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # publish the draft Release (its tag v<VERSION> is made on the merge commit)
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          persist-credentials: false
+      - name: Publish the draft Release named by the merged formula
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          V="$(sed -n 's/^  version "\([0-9][0-9.]*\)"$/\1/p' Formula/forja.rb | head -1)"
+          [ -n "$V" ] || { echo "Formula/forja.rb names no version: nothing is published"; exit 1; }
+          draft="$(gh release view "v$V" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>/dev/null || echo none)"
+          if [ "$draft" = false ]; then echo "v$V is already published"; exit 0; fi
+          [ "$draft" = true ] || { echo "There is no draft Release v$V: run Forja's release workflow first"; exit 1; }
+          mkdir -p sums
+          gh release download "v$V" --repo "$GITHUB_REPOSITORY" --pattern 'forja-*.tar.gz.sha256' --dir sums
+          for f in sums/*.sha256; do
+            h="$(cut -d' ' -f1 < "$f")"
+            grep -q "sha256 \"$h\"" Formula/forja.rb || { echo "$(basename "$f"): $h is not in Formula/forja.rb: nothing is published"; exit 1; }
+          done
+          gh release edit "v$V" --repo "$GITHUB_REPOSITORY" --draft=false --latest --target "$SHA"
+          echo "Forja $V is published."

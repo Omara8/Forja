@@ -1,0 +1,7 @@
+# Dependabot proposes updates to the actions publish.yml pins (by commit SHA, the tag in a comment).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
