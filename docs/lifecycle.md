@@ -3,8 +3,8 @@
 [← Forja](../README.md)
 
 Forja 0.10.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
-read and written only through Forja's write gateway. Forja runs offline, on one computer: the desktop app is the main way to use it,
-the terminal (`forja`) stays for CI and scripts, and only one of them writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
+read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
+writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
 ## Stages, roles and what each writes
 
@@ -21,8 +21,7 @@ code-insight reads existing code and writes reports only (`repos/<repo>/insight/
 
 ## Product types and gates
 
-Each product has a type (`product.json` `product_type`), chosen when it is added and changed later in the app's Settings → Product
-(in the terminal: the product's Settings → Product type).
+Each product has a type (`product.json` `product_type`), chosen when it is added and changed later in the app's Settings → Product.
 
 | Product type | What it is for | Areas |
 |---|---|---|
@@ -41,7 +40,7 @@ product:
 | Test readiness | At least one plan item (feature, epic or story) is approved |
 | Development | At least one plan item is approved; Ready to build lists approved stories only |
 
-There is no "start anyway": a closed area says what must be approved first, in the same words in the app and the terminal. Once an
+There is no "start anyway": a closed area says what must be approved first. Once an
 area has opened, it stays open: later items are added by the append skills through the same chain, and old items are never gated
 again.
 
@@ -143,14 +142,17 @@ is listed and you decide). Then Forja deletes the folder and restores the ticket
 A job that reads an item which changes while it works is asked to update, continue on the old version, or take it offline.
 A finished build made from an older version than the current one is outdated work (computed, never written into the job).
 
-## Handing a platform section to someone outside Forja
+## Handing the product to someone else
 
-The tech lead runs `forja architecture design-sections`. For each platform it asks who designs the section.
+Every platform section is designed in design-sections, here. A product moves to another person only whole, by Export and
+Import, like a baton passed for a while and passed back.
 
-| The answer | They run | Then |
-|---|---|---|
-| Here, now | Nothing: the section is designed in this run | — |
-| Someone outside Forja: make a bundle to send | `forja architecture architecture-section --bundle <bundle.zip>` | They send back the return bundle; `forja architecture architecture-merge --bundle <return.zip>` shows each returned object that differs to decide on; a change to an approved object follows the rules for changing approved work |
+| Step | What happens |
+|---|---|
+| Export (Settings → Import / Export) | One `<name>.forja` file with every item's version. Your copy becomes read-only and says "With <name> since <date>" (the name is optional); Undo the hand-off makes it yours again |
+| Their work | They import it, work on it (a platform lead designs their section) and export it back |
+| Take back (Import of the same product) | Everything new or newer in the file is taken; generated files are built again. An item newer on your side refuses the take-back, since nothing should change here while the product is away. The old copy is kept in `_local/taken-back/` |
+| A different Forja version | Refused: both sides run the same Forja version |
 
 ## From a planned story to code
 
@@ -198,7 +200,7 @@ The rule, everywhere data can clash (a review, a writing agent's change, the che
 | 2 Minor points | Written into the tickets they are about (a ticket's Review notes; for an object, the tickets that reference it). They never block and never start a loop. |
 | 3 One fix round | Blockers and majors get exactly one AI fix round: in a review, the skills that write those items; for a writing agent whose change was refused or would break the product, the same agent once more from an empty sandbox, told exactly why. Every change, including the fix, is first applied to a throw-away copy of the product and checked there; a change that would add a blocker or a major is not written. |
 | 4 Settled | When the round settles everything, the run carries on from where it was: the next step, question or skill. No second review. |
-| 5 Offline review | When it does not, an offline review opens at once: `offline-review-<n>`, every point most severe first, every detail in `offline-review-<n>.md` in the product's cache (`_local/cache/products/<product id>/offline-reviews/`). Answer it in Approvals and change requests → Offline reviews → `offline-review-<n>` (or right away when a skill opened it) with one block of text: one paragraph for every point, or `1- ... / 2- ...` (`1=`, `1)`, `1.`, `1:` also work). Forja applies the answers once; nothing goes round again. A skill that opened one waits for it (paused, saying so) and carries on with the answers (`forja resume`). If even the answers cannot be written, that change is left out, the review says so, and the run carries on. |
+| 5 Offline review | When it does not, an offline review opens at once: `offline-review-<n>`, every point most severe first, every detail in `offline-review-<n>.md` in the product's cache (`_local/cache/products/<product id>/offline-reviews/`). Answer it in the app's Offline reviews → `offline-review-<n>` (or right away when a job opened it) with one block of text: one paragraph for every point, or `1- ... / 2- ...` (`1=`, `1)`, `1.`, `1:` also work). Forja applies the answers once; nothing goes round again. A job that opened one waits for it (saying so) and carries on with the answers. If even the answers cannot be written, that change is left out, the review says so, and the run carries on. |
 
 What no longer exists: the loop limit (product settings), the "fix now, then review again" offer, the "another review round"
 choice, the retry menus of a stopped step (a step that fails runs once more by itself, then stops saying why; one that stops
@@ -212,8 +214,8 @@ Other 0.9.0 changes:
   title and links.
 - **A run that does not finish leaves nothing half done.** A run that crashed, was refused by the write gate, was killed or whose
   process vanished has its items undone: what it created is retired (a ticket: Done, won't do), what it changed gets back the
-  content it had before the run (a new version saying why). Nothing is deleted. A paused run (Ctrl+C, waiting for an answer) keeps
-  its work for `forja resume`.
+  content it had before the run (a new version saying why). Nothing is deleted. A job waiting for an answer keeps
+  its work: it continues from the app.
 - **Documents and the product page never crash a run.** An object with empty fields is shown by its title and id; a document that
   cannot be rebuilt keeps its last good copy and says why.
 - **A changed answer says what it affects.** Changing an earlier answer lists the items written from it, with their titles, and
@@ -240,7 +242,7 @@ Other 0.9.0 changes:
 
 ## The desktop app, gates and question groups (0.10.0)
 
-- **The desktop app.** Forja is used from a desktop app (macOS Apple Silicon, Windows, Linux); the terminal stays for CI and scripts.
+- **The desktop app.** Forja is used from a desktop app (macOS Apple Silicon, Windows, Linux); the terminal keeps the commands that ask nothing.
   Each product is worked from its dashboard. [The desktop app](desktop-app.md) describes every screen.
 - **Product types and gates.** A new product (MVP / PoC / Fresh Idea) opens its areas through gates; an existing or live product has
   every area open and fills earlier stages as items not approved yet (see "Product types and gates" above).

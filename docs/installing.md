@@ -3,7 +3,7 @@
 [← Forja](../README.md)
 
 Forja comes in two parts, from the same release on github.com/Omara8/Forja: the **desktop app** (the main way to use it, with Forja's
-engine inside) and the **`forja` command** (the terminal, for CI and scripts). Each installs all six kits at once, plus `shared/`, the
+engine inside) and the **`forja` command** (setup, upgrade, doctor, the log). Each installs all six kits at once, plus `shared/`, the
 files they all use, ready to run: compiled, with its own Python 3.13. Install either or both; they work on the same products.
 
 ## Requirements
