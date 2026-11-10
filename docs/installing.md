@@ -24,6 +24,8 @@ Download the file for your computer from the [latest release](https://github.com
 | Windows (x64) | `.msi`, or the setup `.exe` | Run it; the setup `.exe` installs for your user only, with no administrator rights |
 | Linux (x64) | `.AppImage`, or `.deb` | The `.AppImage` runs as it is once made runnable (`chmod +x` followed by its full path); the `.deb` installs with your package manager, for example `sudo apt install` followed by the file's full path |
 
+The first start sets Forja up on this computer by itself: your products go in `Documents/Forja-Products` (Settings → This machine moves them), every AI tool it finds is used, and earlier archives stay where they are. Then Settings → AI tools opens, to sign in. A terminal install (`forja setup`) asks the same questions in the terminal instead.
+
 Forja is built on free tiers only, so the macOS and Windows apps are not signed by Apple or Microsoft. Every release file is signed
 with Sigstore instead (its `.sigstore.json` and `.sha256` sit next to it on the release). The first launch asks once:
 

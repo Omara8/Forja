@@ -8,6 +8,9 @@ dashboard; every job runs in the engine the app starts ([running a job](running.
 The app does no work itself: it starts Forja's engine (`forja serve --json`, below) and sends it every action. The terminal runs
 the same engine code, so both refuse the same things with the same words, and both write the same products and the same log.
 
+One Forja desktop runs at a time: opening it again brings the open one up, closes it and opens it again. While a job is working it asks
+first (Close and reopen, or Keep it open); a job waiting for your answer is never lost and continues after the start.
+
 ## The screens
 
 | Screen | What it shows | What you do there |
@@ -15,16 +18,16 @@ the same engine code, so both refuse the same things with the same words, and bo
 | **Guide** | What Forja can do, read from the code itself: the six kits with their skills and approving roles; for each product type, when each area opens (and, for an existing or live product, what a ticket fills in); four ways to work: a new idea, MVP or PoC; an existing product straight to development; an existing product straight to a test plan; legacy code understood first. With a product open, which of its areas are open now and why the others are not | Pick a path and start its first step for the open product |
 | **Ask about this product** | A side panel beside any screen of a product | Ask a question about the product; the answer comes from its own items, citing their ids, as a job that reads only |
 | **Home** | Every product on this computer (name and folder, type, the Forja version that wrote it, platforms, ticket key, idle or busy), Being worked across all products, and Waiting for you (open clashes and offline reviews) | Open a product, start a New product, watch a job. A product whose folder was moved outside Forja is listed under Folder not found: Locate folder… points Forja at it again |
-| **New product** | One page, in order: 1. new product or existing software; 2. where the code is (or "It has no code yet"); 3. the name and ticket key (a key is suggested from the name); 4. the platforms and each platform's repos | Create the product. A product from another computer comes in through Settings → Import / Export, never here |
+| **New product** | One page, in order: 1. new product or existing software; 2. documents about it (files, a folder or a note), or "No documents exist yet" (then no job asks); 3. the name (its folder is made inside Forja's products folder, Settings → This machine) and ticket key (a key is suggested from the name); 4. the platforms; 5. each platform's repos, or "No code yet" for it | Create the product. A product from another computer comes in through Settings → Import / Export, never here |
 | **Migration** | A product written by an older Forja: the steps from its version to this one, with their time | Migrate it. Nothing else opens it until it is migrated |
 | **A product's dashboard** | See [the dashboard](#the-dashboard) | Everything about one product |
 | **Questions** | One area's question groups, one group on one page | Answer, check the group, settle what the check finds. Moving on with nothing typed skips a group that has no required question (Skip this group does the same; open it again any time to answer); a required question must be answered first. When every group of a skill is folded or skipped, its job starts at once and writes the items from those answers, asking nothing the groups hold |
 | **Ticket form** | One ticket as in Jira | Create, edit or fill in a ticket; Save, or Save and build |
-| **A job** | One job while it runs: its questions (each with "? Explain this question"), its agents with model, tokens and cost so far (estimates), its end | Answer its questions; go back to any earlier answer (its cost is shown first); stop it |
-| **Product page** | The product page inside the app: the Overview, the Design map, and a tab for each kind of item | Read; every id is a link |
-| **Reports** | The product, area and skill reports | Read; export as `.md` or `.html` |
+| **A job** | One job while it runs: its questions (each with "? Explain this question"), its agents with model, tokens and cost so far (estimates), its end. A job Forja picked up after it started again opens by itself | Answer its questions; go back to any earlier answer (its cost is shown first); open each AI call's own log (Log); stop it |
+| **Product page** | The product page inside the app: the Overview (what fills each part still empty, and which step fills it), the Design map, a tab for each kind of item, Documents (with what write-docs wrote) | Read; every id is a link |
+| **Reports** | The product, area and skill reports, code insight's reports, and every file a run kept (Kept by runs: write-docs' documents, a plan) | Read; export as `.md` or `.html`; Open folder for a run's file |
 | **Change requests** and **Offline reviews** | The open ones, across products | Raise, simulate on a throw-away copy, decide; answer an offline review's points |
-| **Job log** | Every job that ended, per product | Read what ran, how it ended and why |
+| **Job log** | Every job that ended, per product | Read what ran, how it ended and why; a row opens its job |
 | **Log** | Forja's one log on this computer | Find the detail behind an error; export a copy |
 | **Settings** | See [Settings](#settings) | |
 
@@ -37,6 +40,7 @@ Every open item shows in exactly one section, in this order.
 
 | Section | What is in it |
 |---|---|
+| **Next step** | The one step to take next, with Start, and marked Next in its area. A new product: Requirements, Architecture and Planning in order (question groups first, then each skill, then the stage's review). An existing product, while its code is not recorded yet: code insight's structure report, then Write design documentation for the full project (it records the architecture as built: the design map), then Map what the product does today. A step already done asks before it runs again |
 | **Needs you** | Filter chips with their counts: Clashes, Offline reviews, Sign-offs, Open questions, Change requests, and Tickets needing details (off by default). Each item has one button: Resolve, Answer, Sign off, Open or Fill in |
 | **Areas** | The six areas (Code insight, Requirements, Architecture, Planning, Test readiness, Development), each open, approved or locked. A locked area says why; an open one lists its skills (✓ once a job of it finished): a skill with questions opens its groups, the others start as a job. Approve the stage, and the stage's review, open once every skill before the review finished (the first approval); until then the area says which ones are left. Development also offers New ticket and Report a bug |
 | **To answer** | Question groups not settled yet, by area, with Continue |
@@ -112,7 +116,7 @@ never holds an answer, a prompt or a file's contents, only ids and sizes. The lo
 | AI tools and accounts | Each AI tool found, its version and path, whether it is signed in, which ones Forja may use and the default; agents at once |
 | Models | One model per tier (cheap, mid, strong) and tool; empty follows the tool itself |
 | Product | Each product's ticket key and type; its repos (each repo's folder on this computer, kept here only; Add a repo); the roles you hold |
-| This machine | The Forja-Archive folder, the theme (night or day), the `forja` command |
+| This machine | Where Forja keeps its products (Change… shows what moves, then moves Forja's own folders there: `_local` and each product folder directly in the old one; nothing else is touched), the theme (night or day), the `forja` command |
 | Import / Export | Import a product another computer exported, or take back one you handed off; export (hand off) a product as one file; forget a product on this computer (its folder stays) |
 | Hooks and servers | Hooks, MCP servers and allow rules in your AI tools' user settings that Forja did not write |
 | About | The engine's version, and Check for an update |

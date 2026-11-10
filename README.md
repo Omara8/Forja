@@ -5,7 +5,7 @@
 <p align="center">
 <img src="https://img.shields.io/badge/forja-0.10.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.10.0">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
-<img src="https://img.shields.io/badge/kits-6%20·%2038%20skills%20·%2060%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 38 skills, 60 agents">
+<img src="https://img.shields.io/badge/kits-6%20·%2039%20skills%20·%2062%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 39 skills, 62 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
 <img src="https://img.shields.io/badge/macOS%20·%20Linux%20·%20Windows-69727f?style=flat-square&labelColor=20242b" alt="macOS, Linux and Windows">
 <img src="https://img.shields.io/badge/license-proprietary-69727f?style=flat-square&labelColor=20242b" alt="Proprietary license">
@@ -169,7 +169,7 @@ The dashboard's Needs you lists everything waiting for you.
 ## Kits and skills
 
 <!-- forja:kits -->
-Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: from the Forja app, as a job you can follow, answer and stop. 6 kits, 38 skills, 60 agents. One install brings all of them: [Install](#install).
+Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: from the Forja app, as a job you can follow, answer and stop. 6 kits, 39 skills, 62 agents. One install brings all of them: [Install](#install).
 
 | | Kit | For | Skills |
 |---|---|---|---|
@@ -197,6 +197,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 
 | Skill | What it does |
 |---|---|
+| `map-the-product` | An existing product's code and documents → what it does today: needs, scope, business rules and flows, as built |
 | `elicit-requirements` | Documents + your answers → needs, goals, scale and success measures |
 | `define-scope` | Needs → scope items: what is in and what is out |
 | `analyze-requirements` | Scope → business rules with their values, flows with their steps; gaps as questions |
@@ -261,7 +262,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | `write-tests` | Tests for a story, a feature, a class or your current changes |
 | `improve-coverage` | Coverage up where it matters, measured before and after |
 | `fix-bug` | Ranked causes, you confirm one, then the fix and a test |
-| `write-docs` | High-level and low-level design documentation with diagrams, checked against the code |
+| `write-docs` | High-level and low-level design documentation with diagrams, checked against the code; the full project at high level also records its architecture as built (the design map) |
 | `review-code` | Reviews a branch before the pull request (never changes code) |
 
 </details>
