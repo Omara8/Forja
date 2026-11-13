@@ -7,12 +7,12 @@
 | What | Where | How to change it |
 |---|---|---|
 | Saved answers (the code to follow, linters, coverage source …) | The repo's entry in the product (`repos/<repo>.json`, `settings`) | Menu → Saved answers for a repo |
-| Team rules (rules every agent follows in every run, such as "use our logging helper") | team-rule objects in the product | Menu → Saved answers for a repo; or keep a correction as a team rule when a run offers it (a "Follow" answer). A removed rule stops applying and can be made active again |
+| Team rules (rules every agent follows in every run, such as "use our logging helper") | team-rule objects in the product | Kept when a job offers it (a "Follow" answer to a correction). A removed rule stops applying and can be made active again |
 | Helpers a build added | `repos/<repo>/helpers/<name>.json` in the product, with the file's fingerprint | Kept by the building skill; handed to later stories while the file still matches |
-| The repo's folder on this computer | `Forja-Archive/_local/paths.json` | `forja repos path` |
-| The project's own skills and agents, as the agents read them | `Forja-Archive/_local/cache/repos/<repo key>/_cache/forja/project-skills.md` | Rebuilt at the start of every development run |
+| The repo's folder on this computer | `Forja-Archive/_local/paths.json` | Set when the product is created, at an import (optional) or in Settings → Product → Repos |
+| The project's own skills and agents, as the agents read them | `Forja-Archive/_local/cache/repos/<repo key>/_cache/forja/project-skills.md` | Rebuilt at the start of every development job |
 
-Answers live in the runs that asked them (`runs/<run-id>/run.json`); later questions and agents read the newest answer per question.
+Answers live in the jobs that asked them (`runs/<id>/run.json`), or as draft answers of their question group (`work/drafts/`) until a job takes them; later questions and agents read the newest answer per question.
 
 ## The project's own skills and agents (development)
 

@@ -24,7 +24,7 @@ Download the file for your computer from the [latest release](https://github.com
 | Windows (x64) | `.msi`, or the setup `.exe` | Run it; the setup `.exe` installs for your user only, with no administrator rights |
 | Linux (x64) | `.AppImage`, or `.deb` | The `.AppImage` runs as it is once made runnable (`chmod +x` followed by its full path); the `.deb` installs with your package manager, for example `sudo apt install` followed by the file's full path |
 
-The first start sets Forja up on this computer by itself: your products go in `Documents/Forja-Products` (Settings → This machine moves them), every AI tool it finds is used, and earlier archives stay where they are. Then Settings → AI tools opens, to sign in. A terminal install (`forja setup`) asks the same questions in the terminal instead.
+The first start sets Forja up on this computer by itself: your products go in `Documents/Forja-Products` (Settings → Storage moves them), the first AI tool it finds is the active one, and earlier archives stay where they are. Then Settings → AI tools opens, to sign in and pick the active tool. A terminal install (`forja setup`) asks the same questions in the terminal instead.
 
 Forja is built on free tiers only, so the macOS and Windows apps are not signed by Apple or Microsoft. Every release file is signed
 with Sigstore instead (its `.sigstore.json` and `.sha256` sit next to it on the release). The first launch asks once:
@@ -47,7 +47,7 @@ start it. Settings → About shows the engine's version and checks for an update
 | Linux, curl | the same command | `/opt/forja` (sudo once), and the `forja` command in `/usr/local/bin` |
 | Windows, PowerShell | `irm https://github.com/Omara8/Forja/releases/latest/download/install.ps1 \| iex` | `%USERPROFILE%\forja` (no administrator rights) |
 
-The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.10.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
+The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.11.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
 
 The first `forja` (or `forja setup` at any time) sets up this computer:
 
@@ -66,7 +66,7 @@ The first `forja` (or `forja setup` at any time) sets up this computer:
 |---|---|
 | Forja itself | `<install folder>/bin` (the `forja` command), `python/` (Python 3.13), `app/` (Forja: compiled modules, encrypted prompts, `BUILD.json`, `IT-NOTE.md`) |
 | Your settings | `~/forja/config` (`%USERPROFILE%\forja\config`): `forja.json`, `models.json`. Kept on every update |
-| This computer's own state | `Forja-Archive/_local/`: `paths.json` (each product's and repo's folder here), `locks/` (one file per running job), `tmp/` (jobs' working files, deleted when each job ends), `logs/` (Forja's one log: `forja.jsonl`, five files of 5 MB at most, secrets removed), `cache/`, `kits/<kit>/` |
+| This computer's own state | `Forja-Archive/_local/`: `paths.json` (each product's and repository's folder here), `locks/` (one file per running job), `tmp/` (jobs' working files, deleted when each job ends), `logs/` (Forja's one log: `forja.jsonl`, five files of 5 MB at most, secrets removed), `cache/`, `kits/<kit>/` |
 | Earlier archives | `Forja-Archive/_old_archive/` |
 | Products made before 0.7.3 | `Forja-Archive/legacy/<date>/`, moved whole and untouched |
 | Products | `Forja-Archive/<product>/` by default, or another folder on this computer (Products → Move) |
@@ -109,8 +109,8 @@ or the archive: they stay where they are, and a later install picks them up agai
 | What runs | `bin/forja` → `python/` → `app/core/forja_main.py` (a one-line loader) → Forja's compiled modules. No `.py` source and no prompt in plain text ships |
 | Fingerprints | `app/BUILD.json` lists the SHA-256 of every shipped file and is checked at every start: a changed install stops with a plain message (only `forja doctor`, `forja upgrade` and `forja uninstall` still run). `app/IT-NOTE.md` lists them for people |
 | Desktop app | Tauri 2 with plain HTML, CSS and JavaScript. Its content security policy allows only its own files and no inline script; it may call only its engine and the open and save dialogs. The engine runs as its sidecar over standard input and output, never a network port, after its SHA-256 is checked |
-| Hooks Forja did not write | `forja doctor` and the app's Settings → Hooks and servers list the hooks, MCP servers and allow rules in Claude Code's, Codex's and Copilot's user settings that Forja did not write; Forja warns at start when that list changed, and a Claude Code user hook Forja did not write stops a start |
-| Releases | Built by the private repo's workflow with every action pinned to a commit, read-only permissions except the publishing job, build tools pinned by version and SHA-256; published as a draft Release and a pull request on the public repo that the owner approves before anything is published |
+| Hooks Forja did not write | `forja doctor` and the app's Settings → Safety list the hooks, MCP servers and allow rules in Claude Code's, Codex's and Copilot's user settings that Forja did not write; Forja warns at start when that list changed, and a Claude Code user hook Forja did not write stops a start |
+| Releases | Built by the private repository's workflow with every action pinned to a commit, read-only permissions except the publishing job, build tools pinned by version and SHA-256; published as a draft Release and a pull request on the public repository that the owner approves before anything is published |
 | Network | Forja's own code makes no network calls. `forja upgrade` runs brew or the installer, which download from github.com; the desktop app's update check reads the release's `latest.json` on github.com |
 
 ## Forja 0.6.4 and earlier (from a zip)
