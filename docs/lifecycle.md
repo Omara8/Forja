@@ -69,7 +69,7 @@ time and AI usage, or "Go straight to development".
 | Links | Stored once, on the "from" side; the inverse is computed. Some links are pinned to a version (an open question's asks_about) |
 | Ownership | `model/ownership.json`: one owner per field. The write gateway checks every field of every change before it writes |
 | Write gateway | The one function every write goes through: it checks the model (who may write which field, allowed status moves, field shapes, links), writes all or nothing, and adds a line to each changed item's version log |
-| Agents | A writing agent writes one JSON file per item into its own sandbox (new items named sandbox-<full type name>-<n>, changes named after the existing item's id), then DONE.json. When it stops, Forja takes the sandbox in turn, gives the new items their real ids, rewrites the links, writes the set through the write gateway and clears the sandbox. Agents never write product files; review agents return their findings in a JSON file |
+| Agents | A writing agent writes one JSON file per item into its own sandbox (new items named sandbox-<full type name>-<n>, changes named after the existing item's id). When it stops, Forja takes the sandbox in turn, gives the new items their real ids, rewrites the links, writes the set through the write gateway and clears the sandbox. Agents never write product files; review agents return their findings in a JSON file |
 | Broken files | A file that breaks the model is listed as a warning when the product is opened. The product still opens; skills skip that item until it is fixed by hand |
 | Platforms | A product always has at least one platform: creating one without any is refused, and opening one without any asks for them first |
 | Change sets | A change set is validated whole and written whole, or refused whole: nothing is half-written |
@@ -347,16 +347,26 @@ Other 0.9.0 changes:
   share a platform. Selecting an outside system lists each user with what it uses it for. A refresh moves what a replaced box
   held (a root project now its repository's library, a module now a component): its calls, stories, decisions and words, and
   what pointed at it.
-- **Targeted reading.** The architecture report asks how much code to read: Targeted (the default) or Every file. Targeted
-  reads only the files that show how the system works: a script gathers each file's evidence (its imports of network, storage,
-  security, injection or outside libraries; system calls an import can't show; addresses; entry points; what it declares; how
-  many files import it), a strong agent (file-picker) picks per unit from that evidence, never from a name, and a script checks
-  the pick: a file with evidence is read or has the agent's reason. Units of five code files or fewer are read whole. Every run
+- **What the report reads.** The architecture report asks one question, "What should the report read?": the files that show the
+  architecture (the default), only some folders, or every file (slower and costlier: worth it for a small repository or a full
+  audit). The default reads only the files that show how the system works: a script gathers each file's evidence (its imports
+  of network, messaging, storage, security, injection or an outside service's SDK; system calls an import can't show;
+  addresses; entry points; what it declares; how many files import it), a strong agent (file-picker) picks per unit from that
+  evidence, never from a name, and a script checks the pick: an entry point or an integration file left out without a reason
+  is added back. Units of five code files or fewer are read whole. Every run
   says what it did with every file of the repository, and FILES.md lists each one. Facts kept from earlier runs are reused in
-  both; the recorder describes only units whose files changed.
-- **Offline reviews.** A writer's offline review lives and ends with its job: answered on its page, the answers go to the job's
-  own question; the job ending closes it. A point said twice is one point. A platform section created again for its platform
-  is a change to it, never a refusal.
+  all three; the recorder describes only units whose files changed.
+- **Offline reviews.** Only a decision reaches you: a change that would clash with the product. What Forja itself cannot
+  write (a field missing, a link to nothing) gets the one fix round, and then the job stops saying it is Forja's own error. A
+  link to something Forja left out of the design is moved to what replaced it or dropped, and the run's notes say which. A
+  writer's offline review lives and ends with its job: answered on its page, the answers go to the job's own question; the job
+  ending closes it. A point names items by their titles, and a point said twice is one point. One status everywhere (the list,
+  the page, Needs you): Open, Answered, or Closed with its reason in plain words; a closed review's page is read-only. Close
+  review closes an open one; it needs a reason ("Why are you closing it?"), and a job waiting on it goes on without the change
+  and logs why. A platform section created again for its platform is a change to it, never a refusal.
+- **What agents are told.** Every agent on a repository is told how a search gets through the guard and which files the
+  secrets check keeps from it (a bundled library too large to check, a file skipped there). A file filter lists names: only a
+  secret name refuses it. A job's log says when it waits for an answer and how long the answer took.
 - **Needs you.** Each row has a ×: the row is hidden from Needs you for good, stays open, and is listed in To answer. Hide folds
   the whole box until Forja is closed. An open question is answered on its page (Answer), and waits in review to be folded in.
 - **Migration.** One step, `outdated-reviews`: every offline review an older Forja opened closes as outdated, an open question
