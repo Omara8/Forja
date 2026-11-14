@@ -47,7 +47,7 @@ start it. Settings → About shows the engine's version and checks for an update
 | Linux, curl | the same command | `/opt/forja` (sudo once), and the `forja` command in `/usr/local/bin` |
 | Windows, PowerShell | `irm https://github.com/Omara8/Forja/releases/latest/download/install.ps1 \| iex` | `%USERPROFILE%\forja` (no administrator rights) |
 
-The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.11.1` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
+The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.11.2` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
 
 The first `forja` (or `forja setup` at any time) sets up this computer:
 

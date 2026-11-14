@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.11.1 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.11.2 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -332,3 +332,34 @@ Other 0.9.0 changes:
   example is empty or "not shown", and the links to them; the design
   map starts over. Kept: approved items, tickets, documents, settings, offline reviews. This computer's files are wiped once:
   a product imported later never wipes what Forja has made since. Every older node reaches 0.11.1 in one jump.
+
+## The build files read closer, targeted reading, Needs you (0.11.2)
+
+- **Structure.** A build with subprojects never makes its root a unit (it only configures them; what it applies to the whole
+  repository is read for outside systems), and a plugin listed with `apply false` is not applied. A module with no code (only a
+  manifest, icons or strings) is left out. Coordinates are read from `publishing {}` blocks and from `GROUP` /
+  `POM_ARTIFACT_ID`, and a project takes its root's group. A bundled JAR or AAR is a dependency, never dropped: on the
+  repository that builds it when its classes' packages (or an AAR's manifest package) are that repository's own, else on an
+  outside system named after the file. A Gemfile that only installs fastlane is an outside system used by the units its lanes
+  build (else by the repository's apps). One outside system per name for the whole product: one box, a line from each user.
+- **The design map.** Everything is centred: each row in its frame, the modules inside each app, every box's words. A frame is
+  named by the platform chosen for its repository (Android, Android SDK, Java SDK), with the repository's name only when two
+  share a platform. Selecting an outside system lists each user with what it uses it for. A refresh moves what a replaced box
+  held (a root project now its repository's library, a module now a component): its calls, stories, decisions and words, and
+  what pointed at it.
+- **Targeted reading.** The architecture report asks how much code to read: Targeted (the default) or Every file. Targeted
+  reads only the files that show how the system works: a script gathers each file's evidence (its imports of network, storage,
+  security, injection or outside libraries; system calls an import can't show; addresses; entry points; what it declares; how
+  many files import it), a strong agent (file-picker) picks per unit from that evidence, never from a name, and a script checks
+  the pick: a file with evidence is read or has the agent's reason. Units of five code files or fewer are read whole. Every run
+  says what it did with every file of the repository, and FILES.md lists each one. Facts kept from earlier runs are reused in
+  both; the recorder describes only units whose files changed.
+- **Offline reviews.** A writer's offline review lives and ends with its job: answered on its page, the answers go to the job's
+  own question; the job ending closes it. A point said twice is one point. A platform section created again for its platform
+  is a change to it, never a refusal.
+- **Needs you.** Each row has a ×: the row is hidden from Needs you for good, stays open, and is listed in To answer. Hide folds
+  the whole box until Forja is closed. An open question is answered on its page (Answer), and waits in review to be folded in.
+- **Migration.** One step, `outdated-reviews`: every offline review an older Forja opened closes as outdated, an open question
+  with answers moves to in review, the recorder's frame names go, and a design map recorded by the older build reader asks for
+  a refresh across every repository (the next step on the dashboard; what was read is reused). Nothing is deleted. Every older
+  node reaches 0.11.2 in one jump.
