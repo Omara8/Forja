@@ -5,7 +5,7 @@
 # Run it again to update: it replaces Forja and keeps your settings, archive and products.
 # Every download is checked before anything is replaced: with cosign installed, its Sigstore signature (made by Forja's
 # release workflow on GitHub); without cosign, its SHA-256 only, and the installer says the signature was not checked.
-#   $env:FORJA_VERSION = "0.11.0"   a given release instead of the newest
+#   $env:FORJA_VERSION = "0.11.1"   a given release instead of the newest
 #   $env:FORJA_ROOT = "D:\forja"   another install folder
 #
 # Where Forja goes (never a hidden folder, no administrator rights): %USERPROFILE%\forja

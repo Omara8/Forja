@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.11.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.11.1 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -288,7 +288,8 @@ Other 0.9.0 changes:
   until the limit resets (or another AI tool is active). The readers
   of documents may work out what a document means, marked as such for the person.
 - **The design map.** The architecture report reads every file once (facts kept by content hash; a later run reads only what
-  changed). Each part of the product is one block; repositories are linked by their platforms' connections, confirmed on both sides.
+  changed). What each repository is made of comes from its build files, read by a script (0.11.1); the AI describes the units
+  and never decides them. Repositories are linked by their build files' coordinates; a vendored file is confirmed on both sides.
   Freshness is checked in skill runs only, on every file, new and deleted files included.
 - **The build doctor.** A failing compile, build or test run is explained (what, why, before the job or not) with one
   recommended fix; the person applies it, types what they want instead, or stops. Until it passes or they stop.
@@ -303,3 +304,31 @@ Other 0.9.0 changes:
   copy the library already has is deleted; every other one is cleaned now (the next job asks what the gate held and what can't
   be checked) and then deleted; the finished development runs of the product's repositories on this computer keep only cleaned copies.
   `source-documents/` goes. Every older node reaches 0.11.0 in one jump.
+
+## A strict secrets check, the structure from the build files (0.11.1)
+
+- **Secrets.** The secrets check is strict by default and is checked against a permanent set of over 200 secret lines in every
+  stack that must all be caught: a name and its value written in any form (`key = value`, `key: value`, a call's argument, a
+  setter, a dictionary entry, a two-line name and value), a secret inside a connection string, a URL or a command line, a
+  fallback value (`getenv("X", "real-value")`), more secret names and provider token formats. Credential files (Maven
+  `settings.xml`, NuGet configs, Composer `auth.json`, `.s3cfg`, `.boto`, `.my.cnf`, keytabs, Terraform credentials, Apple `.p8`
+  keys, Docker and Kubernetes credentials) are never read. The
+  cleaned copy an agent reads is kept for the whole job, and made again on the spot when it is missing.
+- **Structure.** What each repository is made of is read from its build files by a script, for every build system Forja knows,
+  without running them: an app is a component; a library one app uses sits inside it; one several use is shared (no owner); one
+  nothing uses is marked; tests and build logic are listed under the repository. The AI describes these units and never adds,
+  drops or moves one. One repository builds on another when its build names the other's coordinates; a vendored jar or AAR,
+  or a near name, is a candidate the recorder confirms in the code.
+- **Contracts.** The architecture report never records contracts. A contract whose request, response (an event or a file sends
+  one way) or example is empty or "not shown" is refused everywhere, Define contracts included.
+- **The design map** is one graph (see [running](running.md)).
+- **Alerts.** While Forja is in the background, a job that needs you is told by a notification, a count on the icon, one flash
+  and (off by default) a short tone: Settings → Notifications.
+- **Migration.** One step, `fresh-scan`, for every product and repository: what the AI read before the check was made strict,
+  and what was written from it, is deleted, so the next job starts fresh. Deleted: the cleaned copies of the code, the secrets
+  checks' records and decisions (asked again), per-file facts, scan notes, Forja-Agent's notes, jobs' working folders, agents'
+  logs, code reports and code-insight's run outputs, the draft components, modules, platform sections and foundations the
+  architecture report recorded, every contract it wrote (approved too: they held no fields), every other contract whose request, response or
+  example is empty or "not shown", and the links to them; the design
+  map starts over. Kept: approved items, tickets, documents, settings, offline reviews. This computer's files are wiped once:
+  a product imported later never wipes what Forja has made since. Every older node reaches 0.11.1 in one jump.

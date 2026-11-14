@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.11.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.11.0">
+<img src="https://img.shields.io/badge/forja-0.11.1-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.11.1">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
 <img src="https://img.shields.io/badge/kits-6%20·%2039%20skills%20·%2067%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 39 skills, 67 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
@@ -288,7 +288,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 
 | Rule | What it means |
 |---|---|
-| Secrets never reach the AI | Git-ignored and secret files (`.env`, keys, keystores, `google-services.json`, `local.properties`) are never read, and no secret value is ever printed. A file that holds a secret is never changed: it becomes a manual step for you |
+| Secrets never reach the AI | Git-ignored and secret files (`.env`, keys, keystores, `google-services.json`, `local.properties`, a service-account key under any name) are never read; in other files a secret is removed, and so is what names one (a key id, a client id or email, a username), and no secret value is ever printed. A file that holds a secret is never changed: it becomes a manual step for you |
 | No git | Forja never creates branches, commits or pushes. You review the changes and commit them with your own tools |
 | Your project's way wins | Skills follow the project's existing style, its own AI skills and agents, and the team rules your team set. More: [what Forja remembers](docs/memory.md) |
 | Agents are fenced | A writing agent writes only its own sandbox; every other agent only its run's work folder. The product folder is read-only to every agent: Forja's write gateway writes the product. No agent is given the whole archive or Forja's own files (run locks, paths, settings). They run no other command; code agents only the repository files of an approved plan. Guards fail closed: if one cannot decide, the read or write is refused |
