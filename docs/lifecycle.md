@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.11.2 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.11.3 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -109,7 +109,7 @@ the meaning change breaks. You see each field old → new and what it touches, a
 | Case | What happens |
 |---|---|
 | The copy checks clean | Accept writes it, recorded as a decision: the stage stays approved. Refuse writes nothing |
-| The copy breaks something | Accept, and settle what it breaks: for each broken item you say in your own words how it should read; Forja-Agent turns your words into fields and the whole chain is checked again on the copy. Nothing is written until it checks clean; each round is your decision, never an AI loop |
+| The copy breaks something | Accept, and settle what it breaks: for each broken item you say in your own words how it should read; Forja-Orchestrator turns your words into fields and the whole chain is checked again on the copy. Nothing is written until it checks clean; each round is your decision, never an AI loop |
 | A ticket built from it is In Progress | It is replaced by a new change ticket (label `change`, link `replaces`) in the Backlog for the next sprint and closed Done with resolution `cancelled`; a Done ticket stays Done |
 | A draft | Not frozen: edited directly from its details screen (Edit), no AI |
 
@@ -270,7 +270,7 @@ Other 0.9.0 changes:
 
 ## Agents lead the jobs (0.11.0)
 
-- **Forja-Agent.** One agent sits in the middle of every job: every kit's skills and Forja's own jobs (resolving a clash,
+- **Forja-Orchestrator.** One agent sits in the middle of every job: every kit's skills and Forja's own jobs (resolving a clash,
   changing an item, a spike). Each kit gives it a playbook (what that kind of job needs). It reads, only after the gates, the
   documents as cleaned copies, every answer, the product's items and the cleaned code of repositories already checked; works in turns
   over the job's notebook; runs Forja's tools (never a shell); asks only what it can't settle; proposes its reading for the
@@ -278,7 +278,7 @@ Other 0.9.0 changes:
   where an option is needed, is dropped and the question asked as usual). Scripts check what it proposes; Forja still owns the
   order of the safety steps (the gates first, the person's approval before any write, the build check after). When its AI call
   can't run, the job says so and goes on without it.
-- **Notes by content hash.** Forja-Agent reads a document or a code file once and keeps notes on it (on this computer, by the
+- **Notes by content hash.** Forja-Orchestrator reads a document or a code file once and keeps notes on it (on this computer, by the
   file's SHA-256); a later job is given the notes while the content is unchanged and reads only what is new or changed.
 - **Documents kept only as cleaned copies.** A document is cleaned the moment it is taken (converted, secret-looking lines
   removed, held when it holds text written for an AI) and the copy as given is deleted; a file that can't be checked waits as
@@ -315,7 +315,7 @@ Other 0.9.0 changes:
   keys, Docker and Kubernetes credentials) are never read. The
   cleaned copy an agent reads is kept for the whole job, and made again on the spot when it is missing.
 - **Structure.** What each repository is made of is read from its build files by a script, for every build system Forja knows,
-  without running them: an app is a component; a library one app uses sits inside it; one several use is shared (no owner); one
+  without running them: an app is a component; a library one app uses is owned by it (drawn in the frame's modules area, never inside the app); one several use is shared (no owner); one
   nothing uses is marked; tests and build logic are listed under the repository. The AI describes these units and never adds,
   drops or moves one. One repository builds on another when its build names the other's coordinates; a vendored jar or AAR,
   or a near name, is a candidate the recorder confirms in the code.
@@ -326,7 +326,7 @@ Other 0.9.0 changes:
   and (off by default) a short tone: Settings → Notifications.
 - **Migration.** One step, `fresh-scan`, for every product and repository: what the AI read before the check was made strict,
   and what was written from it, is deleted, so the next job starts fresh. Deleted: the cleaned copies of the code, the secrets
-  checks' records and decisions (asked again), per-file facts, scan notes, Forja-Agent's notes, jobs' working folders, agents'
+  checks' records and decisions (asked again), per-file facts, scan notes, Forja-Orchestrator's notes, jobs' working folders, agents'
   logs, code reports and code-insight's run outputs, the draft components, modules, platform sections and foundations the
   architecture report recorded, every contract it wrote (approved too: they held no fields), every other contract whose request, response or
   example is empty or "not shown", and the links to them; the design
@@ -342,7 +342,7 @@ Other 0.9.0 changes:
   repository that builds it when its classes' packages (or an AAR's manifest package) are that repository's own, else on an
   outside system named after the file. A Gemfile that only installs fastlane is an outside system used by the units its lanes
   build (else by the repository's apps). One outside system per name for the whole product: one box, a line from each user.
-- **The design map.** Everything is centred: each row in its frame, the modules inside each app, every box's words. A frame is
+- **The design map.** Everything is centred: each row in its frame, every box's words. Every module sits in its frame's modules area saying what uses it, never inside an app; a library that is its repository's only unit shows its main parts inside it, from the code. A frame is
   named by the platform chosen for its repository (Android, Android SDK, Java SDK), with the repository's name only when two
   share a platform. Selecting an outside system lists each user with what it uses it for. A refresh moves what a replaced box
   held (a root project now its repository's library, a module now a component): its calls, stories, decisions and words, and
@@ -373,3 +373,41 @@ Other 0.9.0 changes:
   with answers moves to in review, the recorder's frame names go, and a design map recorded by the older build reader asks for
   a refresh across every repository (the next step on the dashboard; what was read is reused). Nothing is deleted. Every older
   node reaches 0.11.2 in one jump.
+
+## Forja-Orchestrator, Sync Project, item previews (0.11.3)
+
+- **Forja-Orchestrator.** Forja-Agent is renamed Forja-Orchestrator, in two roles. **Forja-Orchestrator (Job)** leads every job
+  of every kit with its kit's playbook and its skill's own (`kits/<kit>/skills/<skill>/playbook.md`, read last). A correction
+  you make (a prefilled answer you replace, a reading of the job you change) is kept on this computer at the end of that
+  skill's playbook, so the skill learns without changing the kit's other skills. Every step and every question of the job
+  runs: it only prefills (each answer with the file and lines it came from: you accept it or change it) and words questions
+  for the product (same meaning, the same options in the product's words; plan approvals, secrets decisions, the gate's holds
+  and manual steps keep Forja's words). "Steps per job" is 250 by default and at most, one number for every AI tool. Each job's
+  page has a timeline of its turns. **Forja-Orchestrator (Product)** looks at a product after every job that changed it: it
+  reads each kit's state (kept by a script) and what that job changed, never the whole product, and proposes up to 3 next
+  jobs, each with why and its evidence. It never starts a job and never changes an item: the dashboard and the side panel show
+  the same list, each with Start and ×.
+- **The end-of-job check.** Before a skill's job ends, a script checks that every deliverable of the skill is there (they are
+  always on) and that nothing it delivered holds a secret-looking line (removed in one fix round); what is still wrong goes to
+  you.
+- **Sync Project.** A button in each product's Settings, for code changed outside Forja. It runs as a job: every source file
+  is compared with the hashes of the last sync and split into "changed by Forja jobs" and "changed outside Forja"; you choose
+  which to check; the change-impact-checker reads each one (one file per call, as a cleaned copy) against the items linked to
+  it; you mark which affected items to update; each update is drafted, tried on a copy and shown to you. It reaches nothing
+  outside this computer.
+- **Item previews.** Every change to approved work is shown item by item: each changed field before and after, every line,
+  never cut; the unchanged fields folded; the reason; everything that relies on it marked still holds or breaks.
+- **Development.** Build and compile always run; the tests are your choice, and with "No tests this time" the job ends Done,
+  built, not tested. A code-rewriting tool the ticket asks for (OpenRewrite, a codemod, a migration plugin) is a step of the
+  plan, run by Forja after it writes the plan, through the repository's build tool; every line it changed is in the changes
+  review and Discard puts it back.
+- **The Copilot hook.** It never ends with an error (an error is an explicit refusal with its reason), runs only the step's own
+  kit's guard, refuses rather than let a call through when it can't decide in time, and records every decision: a call that ran
+  tools with no decision recorded is said on the job. The foreign-hooks check covers every place Copilot reads hooks
+  (`~/.copilot/hooks`, `~/.copilot/settings.json`, each repository's `.github/hooks` and `.claude/settings.json`).
+- **Each job.** Its page shows processing time (Forja doing something) and total time (plus waiting for you while Forja was
+  open; hours with Forja closed never count), the credits Copilot recorded for each agent call (1 credit = $0.01; older plans:
+  premium requests after the model's multiplier), and the security layers that ran on it.
+- **Migration.** One step, `orchestrator-keys`: every kept job's record (stopped, failed or waiting in 0.11.2) has its step
+  keys renamed to Forja-Orchestrator, so Resume and Retry give back every step it finished. A step that really changed is
+  run again with your earlier answers offered. Every older node reaches 0.11.3 in one jump.

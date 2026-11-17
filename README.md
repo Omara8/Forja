@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.11.2-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.11.2">
+<img src="https://img.shields.io/badge/forja-0.11.3-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.11.3">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
 <img src="https://img.shields.io/badge/kits-6%20·%2039%20skills%20·%2068%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="6 kits, 39 skills, 68 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
@@ -88,7 +88,7 @@ only read it.
 | **Questions** | A skill's questions in groups, one group on one page; the group is checked before anything is written |
 | **Ticket form** | A ticket as in Jira: id, type and status required; links to tickets this product does not have yet become placeholders |
 | **Guide** | What Forja can do, read from the code: the kits and their skills, when each area opens for each product type, and four paths (a new idea, MVP or PoC; an existing product straight to development; an existing product straight to a test plan; legacy code understood first). With a product open, which of its areas are open now |
-| **Ask about this product** | A side panel: a question about the open product, answered by Forja-Agent from its items, what its documents say and its code, with the item ids cited (0.11.0); × closes it. An item opens on the product page's details screen |
+| **Ask about this product** | A side panel: a question about the open product, answered by Forja-Orchestrator from its items, what its documents say and its code, with the item ids cited (0.11.0); × closes it. An item opens on the product page's details screen |
 | **Jobs and the Log** | Every piece of work is a job in the product's job log; one log on this computer holds the technical detail, with secrets removed |
 | **Settings** | Forja's own: AI tools (the tools found, the one in use, the model for light, normal and heavy work, limits), Storage (the products folder, Import, products in the folder not added yet), Safety (the guards, on or off; secrets always on; hooks in your AI tools Forja did not write), About (version, update check). Each product has its own Settings under it in the menu: ticket key, type, repositories, Export, Delete |
 
@@ -127,7 +127,7 @@ The dashboard's Needs you lists everything waiting for you.
 | **Nothing assumed** | No technical question has a default. Each shows the recommended option with its reason; you choose |
 | **One way to answer** | Pick an option; every choice has Other (type your own): the answer interpreter reads your words against everything answered so far and asks a follow-up until the answer is solid. Every question has its explanation; at a technical question, Recommend an answer gives one to three choices for this product (you still choose), and What the requirements say explains the requirement objects a question must meet |
 | **Document library** | A new run first asks for the product's documents (requirements, designs, screenshots, exports): read once, secrets removed first; each later question they answer shows the quote and the file, for you to confirm or edit |
-| **Leave any time** | A job that asks waits for you under Being worked (the dashboard and the title bar) and continues at the same question, even after the app is closed and opened again; Stop ends it and undoes what it half wrote |
+| **Leave any time** | A job that asks waits for you under Being worked (the dashboard and the title bar) and continues at the same question, even after the app is closed and opened again; Stop ends it and keeps what it wrote, to Resume or Discard |
 | **Jobs** | Every piece of work (a skill, a group check, an approval, a migration) is a job, numbered per product and never reused (`job-12`). The product's job log (`work/jobs.jsonl`) keeps one line per job that ended: what ran, how it ended and why. A job's record keeps every question with its raw answer, the versions it read and what it produced (`runs/<id>/`). Working files live in `_local/tmp/` and go when the job ends |
 
 More: [running Forja](docs/running.md).
