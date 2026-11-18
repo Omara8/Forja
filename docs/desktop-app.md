@@ -22,7 +22,6 @@ first (Close and reopen, or Keep it open); a job waiting for your answer is neve
 | **Migration** | A product written by an older Forja: the steps from its version to this one, with their time | Migrate it. Nothing else opens it until it is migrated |
 | **A product's dashboard** | See [the dashboard](#the-dashboard) | Everything about one product |
 | **Questions** | One area's question groups, one group on one page | Answer, check the group, settle what the check finds. Moving on with nothing typed skips a group that has no required question (Skip this group does the same; open it again any time to answer); a required question must be answered first. When every group of a skill is folded or skipped, its job starts at once and writes the items from those answers, asking nothing the groups hold |
-| **Ticket form** | One ticket as in Jira | Create, edit or fill in a ticket; Save, or Save and build |
 | **A job** | One job while it runs: its questions (each with "? Explain this question"), the step running now (a step of several parts says how many run at a time and how many are done), every AI call, newest first, with how long it took, its model, tokens and cost (estimates; what runs now on top, the parts still waiting as one line, ten rows at a time, the rest by scrolling), its end. A job Forja picked up after it started again opens by itself | Answer its questions; go back to any earlier answer (its cost is shown first); open each AI call's own log (Log); stop it |
 | **Product page** | The product page inside the app: the Overview (what fills each part still empty, and which step fills it), the Design map, a tab for each kind of item, Documents (with what write-docs wrote) | Read; every id is a link |
 | **Reports** | The product, area and skill reports, code insight's reports, and every file a run kept (Kept by runs: write-docs' documents, a plan) | Read; export as `.md` or `.html`; Open folder for a run's file |
@@ -43,7 +42,7 @@ Every open item shows in exactly one section, in this order.
 |---|---|
 | **Next step** | The one step to take next, with Start, and marked Next in its area. A new product: Requirements, Architecture and Planning in order (question groups first, then each skill, then the stage's review). An existing product, while its code is not recorded yet: code insight's report on the system's structure (it ends with the design map as built), then Map what the product does today. While a repository is shown apart from the design map, refreshing the map across every repository is the next step. A step already done asks before it runs again |
 | **Needs you** | "Showing x of y open items" beside the title, and Hide at the right (folds the box until Forja is closed). Filter chips with their counts: Clashes, Offline reviews, Sign-offs, Open questions, and Tickets needing details (off by default). Each item has one button (Resolve, Answer, Sign off, Open or Fill in) and a ×: the row is hidden from Needs you for good, stays open and is listed in To answer (0.11.2). An open question's Answer opens its page, where Answer takes one answer per point; saved, it waits in review to be folded in |
-| **Areas** | The six areas (Code insight, Requirements, Architecture, Planning, Test readiness, Development), each open, approved or locked. A locked area says why; an open one lists its skills (✓ once a job of it finished): a skill with questions opens its groups, the others start as a job. Approve the stage, and the stage's review, open once every skill before the review finished (the first approval); until then the area says which ones are left. Development also offers New ticket and Report a bug |
+| **Areas** | The seven areas (Code insight, Requirements, Architecture, Planning, Test readiness, Development, Test execution), each open, approved or locked. A locked area says why; an open one lists its skills (✓ once a job of it finished): a skill with questions opens its groups, the others start as a job. Approve the stage, and the stage's review, open once every skill before the review finished (the first approval); until then the area says which ones are left. Tickets and bugs come from the skills (0.12.0: no New ticket or Report a bug button) |
 | **To answer** | Question groups not settled yet, by area, with Continue; and the Needs you rows hidden with their ×, each with its button |
 | **To review** | Drafted items waiting for their stage's review and approval (a new product), with Approve, Edit and Reject |
 | **Being worked** | Jobs running or waiting for you, and stories In Progress, with Watch |
@@ -86,17 +85,39 @@ A clash is never accepted. **Resolve the clash** shows both sides with their rea
 Everything is simulated on a throw-away copy, and the page says so at every step. Whatever your resolution breaks comes back to
 you the same way. Nothing is written until nothing is left; stop at any point and the clash stays open on the group.
 
-## The ticket form
+## Environments (0.12.0)
 
-A ticket as in Jira. Required: **id**, **type** and **status** (for example `CLF-109`, feature, In Progress). Optional: title,
-description, acceptance criteria (one per line, Given … When … Then …), priority (Medium when left empty), component (one of the
-product's repositories), links (Parent, Blocked by, Relates to) and attachments (read into the product's library through the document
-reader and the gate, like any document).
+Each product's menu has **Environments**: where Test execution runs the tests. Forja never starts, deploys or changes an
+environment; it checks it is up and tests it. **+ Add environment** names a new one (optionally read-only: only scenarios that
+change no data run there; Copy keys from… another). Each environment is a table of rows: Type (String, Number, Boolean, URL,
+Secret, File, Folder), Repository, Key and Value, with Check now and how many values are missing. The kits add keys, never values:
+you add each value here. A File or Folder keeps only its path, on this computer (a Folder's builds are offered highest version
+first). A Secret is typed once into this computer's own store (macOS Keychain, Windows Credential Manager; Linux: a secrets file
+only you can read) or kept in your own environment variable (the page names it: ticket key, environment, key); it is masked, can
+be replaced, never shown again, and no AI ever reads it.
 
-A link to an id the product does not have yet makes a **placeholder ticket**: you give its type and status, and it waits under
-Tickets needing details until its owner fills in the rest. In an existing or live product, saving a development ticket also fills
-in its feature, the need it serves and the components it touches, marked not approved yet. Save and build starts the development
-job on it straight away (a story, task or bug).
+## Edit
+
+Every item's page has one **Edit**, as in Jira: every field and every link of the item can be changed. Each link is a chip with
+×; type 3 characters or more in a link's box and the product's items that match show, narrowing with each character, only of
+the types that link takes (a link always points at an item the product holds). A ticket's description sections are edited one
+by one.
+
+**Save** writes nothing by itself: it starts the job that carries the change, with your edit already in it, and opens it. The
+job puts your words into the product's structure and wording, tries the change on a throw-away copy and shows what it affects
+before anything is written; you approve it there.
+
+| You edit | The job Save starts |
+|---|---|
+| A requirement (need, feature request, rule, criterion …) | Add to the requirements (`append-requirements`) |
+| A design item (component, interface, platform section …) | Add to the design (`append-design`) |
+| A feature, epic, story, task, sub-task or spike | Add to the plan (`append-plan`) |
+| A test item (scenario, test data, quality assurance story or task …) | Add or change test items (`append-tests`) |
+| A bug | Report bugs (`report-bugs`), on that same bug: it is updated, never a second one |
+
+The new item replaces the old one (the old one is closed as the stage's skill says), except a bug, which is updated in place. An
+open question is answered on its page, not edited. Edit works whatever the state of the item's area: the item exists, so a
+stage that isn't open yet never stops a change to it.
 
 ## Errors and the Log
 

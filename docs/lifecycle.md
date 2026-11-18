@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.11.3 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.12.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -28,8 +28,8 @@ Each product has a type (`product.json` `product_type`), chosen when it is added
 | New product (MVP / PoC / Fresh Idea) | Software built with Forja from the start | Gated (below); stage approvals |
 | Existing or live | Code your team already has, live or in development | Every area open; no stage approvals |
 
-Each of the six areas (code insight, requirements, architecture, planning, test readiness, development) is open or closed. In a new
-product:
+Each of the seven areas (code insight, requirements, architecture, planning, test readiness, development, test execution) is open
+or closed. In a new product:
 
 | Area | Opens when |
 |---|---|
@@ -39,15 +39,15 @@ product:
 | Planning | The architecture stage is fully approved |
 | Test readiness | At least one plan item (feature, epic or story) is approved |
 | Development | At least one plan item is approved; Ready to build lists approved stories only |
+| Test execution | Quality assurance's automated tests are built and the product has an environment (in an existing product too) |
 
 There is no "start anyway": a closed area says what must be approved first. Once an
 area has opened, it stays open: later items are added by the append skills through the same chain, and old items are never gated
 again.
 
-In an **existing or live** product every area is open, nothing is frozen, and there are no stage approvals. Work fills the earlier
-stages it implies instead: a ticket saved in the ticket form (or a Jira ticket a development job is given) gets its feature, the
-need it serves and the components it touches as items marked not approved yet (`approval: "pending"`, `filled_from` the ticket).
-They wait under Sign-offs on the dashboard, where you approve, edit (directly, no AI) or reject each one. In the
+In an **existing or live** product every area is open (test execution once its automated tests and an environment exist),
+nothing is frozen, and there are no stage approvals. Items an older Forja filled in from a ticket (`approval: "pending"`,
+`filled_from` the ticket) wait under Sign-offs on the dashboard, where you approve, edit (directly, no AI) or reject each one. In the
 terminal, its first screen offers "Understand the code first (code-insight)", which reverse-engineers the whole codebase and takes
 time and AI usage, or "Go straight to development".
 
@@ -102,7 +102,7 @@ A review's temporary folder is deleted when the stage is finalized.
 
 ## Changing approved work (0.11.0)
 
-Forja is used by one person, who decides a change on the spot. A change to approved (frozen) work, from Change item or from a job
+Forja is used by one person, who decides a change on the spot. A change to approved (frozen) work, from Edit on an item's page or from a job
 that needs one, is tried on a throw-away copy of the product, all the way down what relies on it; the change-simulator reads what
 the meaning change breaks. You see each field old → new and what it touches, and accept or refuse it in that job.
 
@@ -247,9 +247,6 @@ Other 0.9.0 changes:
   follow-up question (a gap), or clashes. A clash is never accepted: you change your answer, change the earlier item (a change
   request its owner decides), or let the agent fix it once; what that one fix does not settle becomes an offline review. A skill
   started after its groups are answered asks none of them again.
-- **The ticket form.** A ticket as in Jira: id, type and status required (for example `CLF-109`, feature, In Progress); title,
-  description, acceptance criteria (Given … When … Then …), priority (Medium when left empty), component, links and attachments are
-  optional. A link to an id the product does not have makes a placeholder ticket.
 - **Words.** An item a newer one replaces is discarded (nothing was built from it) or replaced (something was); the link is
   `replaces` / `replaced_by`.
 - **Jobs, not runs.** Work shows as jobs; the job log replaces the list of runs.
@@ -411,3 +408,61 @@ Other 0.9.0 changes:
 - **Migration.** One step, `orchestrator-keys`: every kept job's record (stopped, failed or waiting in 0.11.2) has its step
   keys renamed to Forja-Orchestrator, so Resume and Retry give back every step it finished. A step that really changed is
   run again with your earlier answers offered. Every older node reaches 0.11.3 in one jump.
+
+## Test execution, environments (0.12.0)
+
+- **The seventh kit, test-execution.** Four skills: **run-tests** (quality assurance's automated tests on an environment that
+  is up, for the tickets development built, or the tickets of a Jira export Forja-Orchestrator matches to the automated
+  scenarios; one run page to approve; every scenario's result, `TEST-REPORT.md`), **triage-failures** (each failure sorted by
+  failure-triager: a product bug, a wrong test, the environment or the test data, with its evidence; you confirm each;
+  confirmed bugs reported in the same job, `TRIAGE.md`), **report-bugs** (from a run's failures or your own words; an open bug
+  that is the same problem gets a dated "still happens" entry, never a second ticket, `BUGS.md`) and **verify-fixes** (fixed
+  bugs' scenarios on a new build: passed closes them, failed reopens them; the same build is refused, `VERIFY.md`). The area
+  opens once the automated tests are built and the product has an environment. It tests only tickets development built, and
+  nothing starts a test run for you: Forja-Orchestrator (Product) proposes triage after failures, fix-bug after bugs and
+  verify-fixes after a fix, never a run.
+- **Environments.** Each product has an Environments page: "+ Add environment" (named by you; every test job asks which one
+  by name, nothing preselected), optionally read-only (only scenarios that change no data run there). Each row has a Type
+  (String, Number, Boolean, URL, Secret, File, Folder), a Repository, a Key and a Value. A URL is an address or a Firebase App
+  Distribution link (Android or iOS, with a tester account or "already signed in on this emulator"). A File or Folder is a
+  build (.apk or .apks, .ipa or .app), an API collection or environment, test data, a client certificate, a browser session or
+  a settings file; Forja keeps only its path, on this computer, and reads only a build's version and fingerprint (a Folder's
+  builds are offered, the highest first). Copy keys from another environment; each environment shows how many values are
+  missing.
+- **Keys from the kits, values from you.** Requirements, architecture and planning may add the environments they name;
+  architecture, development (a plan's settings) and test readiness (the automated tests' settings) add keys. No kit ever adds
+  a value. The first to add a key keeps it; the same key twice is refused and the same value under two keys of one
+  repository is flagged. Test readiness writes a warning into the story for each key with no value; test execution won't run
+  without it. Keys found while the product has no environment go into one called "Keys found by Forja" (key only: rename
+  it, copy its keys into your own environments, delete it). Needs you shows an urgent row, which folds but can't be hidden,
+  until one environment has a type and a value for every key.
+- **Secrets.** macOS: the Keychain (default) or your own environment variable; Windows: the Credential Manager (default) or
+  your own environment variable; Linux: a secrets file only you can read (`~/.forja/secrets/<product>/<environment>.env` or
+  your own), outside every repository, checked before every run. Your own variable is named after the product's ticket key,
+  the environment and the key (`CLF_STAGING_API_TOKEN`) and reaches the tests as the key. A secret is masked: you can replace
+  it, never see it. Deleting a row, an environment or the product deletes its secrets. No AI ever reads a secret: Forja's
+  script reads it when a run starts, gives it to the test process only, and replaces it with ‹KEY› in every output; the guard
+  refuses any command that reads Forja's secrets.
+- **Files with secrets stay manual.** A plan's change to a file that holds a secret is a manual step: shown on the cleaned
+  copy (each secret line said, never shown), with the real file's full path (Open the file, Copy the path). After Done, each
+  file is checked for secrets again at once, by itself. Its secrets on the lines the step expected and the file changed: your
+  change is final, its cleaned copy and hash are renewed, nothing is asked. Secrets added, removed or moved: you decide again
+  for that file, shown the lines now and the lines expected. A file that hasn't changed is said (Check again, or not now).
+  Then Forja checks your change matches the step. A secret a change needs becomes a reference (`${API_TOKEN}`) and an
+  environment key.
+- **Edit.** One Edit on every item's page, as in Jira: every field and link (links as chips, found by typing 3 characters or
+  more, only items the product holds). Save starts the job of the item's stage with the edit in it (append-requirements,
+  append-design, append-plan, the new append-tests; a bug through report-bugs, which updates that same bug): Forja words it as
+  the product's items are, tries it on a copy and shows what it affects before anything is written. The ticket form, the
+  draft's direct edit and the dashboard's New ticket and Report a bug buttons are gone; the existing-product reverse fill went
+  with the form (items it filled before still wait under Sign-offs).
+- **Verify fixes.** A bug's scenario that passes only on its re-run closes the bug, done with known problems, noted as flaky.
+- **Python's compiled copies.** Every command Forja runs in a repository (build, tests, coverage, test execution's suite) keeps
+  Python's compiled copies in a new empty folder, deleted after. Python reuses a compiled copy when a file's size and its time in
+  whole seconds are unchanged, so a same-size fix written in the same second as the run before it ran the old code. Your
+  repository's own `__pycache__` is never read, changed or deleted.
+- **Migration.** One step, `environments`: the environments the product's items name (the plan, the test strategy, test
+  resources) become environments, with the keys the automated tests read; no value is added. A setting of a plan written
+  before 0.12.0 has no type: its key comes in as "Not set" (never guessed from its name) and you pick its type on the page; a
+  Not set key stops only test execution. Every older node reaches 0.12.0 in one jump.
+
