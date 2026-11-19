@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.12.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.12.1 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -339,7 +339,7 @@ Other 0.9.0 changes:
   repository that builds it when its classes' packages (or an AAR's manifest package) are that repository's own, else on an
   outside system named after the file. A Gemfile that only installs fastlane is an outside system used by the units its lanes
   build (else by the repository's apps). One outside system per name for the whole product: one box, a line from each user.
-- **The design map.** Everything is centred: each row in its frame, every box's words. Every module sits in its frame's modules area saying what uses it, never inside an app; a library that is its repository's only unit shows its main parts inside it, from the code. A frame is
+- **The design map.** Everything is centred: each row in its frame, every box's words. Every module sits in its frame's modules area saying what uses it, never inside an app; a repository whose build gives one unit (a React app, a library with one build file) shows the modules found in its code and confirmed by you (0.12.0): a library's inside it, an app's in its frame's modules area, each line between them from the code's imports. A frame is
   named by the platform chosen for its repository (Android, Android SDK, Java SDK), with the repository's name only when two
   share a platform. Selecting an outside system lists each user with what it uses it for. A refresh moves what a replaced box
   held (a root project now its repository's library, a module now a component): its calls, stories, decisions and words, and
@@ -395,9 +395,9 @@ Other 0.9.0 changes:
 - **Item previews.** Every change to approved work is shown item by item: each changed field before and after, every line,
   never cut; the unchanged fields folded; the reason; everything that relies on it marked still holds or breaks.
 - **Development.** Build and compile always run; the tests are your choice, and with "No tests this time" the job ends Done,
-  built, not tested. A code-rewriting tool the ticket asks for (OpenRewrite, a codemod, a migration plugin) is a step of the
-  plan, run by Forja after it writes the plan, through the repository's build tool; every line it changed is in the changes
-  review and Discard puts it back.
+  built, not tested. A code-rewriting tool the ticket asks for runs first, with the line you give (or Forja finds for your
+  stack), in your terminal, on your project (a dry run puts back only what it changed); its changes are the first preview page, Forja's own code the second,
+  your manual steps the third, then the build loop (your hint every round, until it passes or you stop). Discard puts it back.
 - **The Copilot hook.** It never ends with an error (an error is an explicit refusal with its reason), runs only the step's own
   kit's guard, refuses rather than let a call through when it can't decide in time, and records every decision: a call that ran
   tools with no decision recorded is said on the job. The foreign-hooks check covers every place Copilot reads hooks

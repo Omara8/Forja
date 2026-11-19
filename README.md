@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.12.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.12.0">
+<img src="https://img.shields.io/badge/forja-0.12.1-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.12.1">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
-<img src="https://img.shields.io/badge/kits-7%20·%2044%20skills%20·%2072%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="7 kits, 44 skills, 72 agents">
+<img src="https://img.shields.io/badge/kits-7%20·%2044%20skills%20·%2075%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="7 kits, 44 skills, 75 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
 <img src="https://img.shields.io/badge/macOS%20·%20Linux%20·%20Windows-69727f?style=flat-square&labelColor=20242b" alt="macOS, Linux and Windows">
 <img src="https://img.shields.io/badge/license-proprietary-69727f?style=flat-square&labelColor=20242b" alt="Proprietary license">
@@ -186,7 +186,7 @@ The dashboard's Needs you lists everything waiting for you.
 ## Kits and skills
 
 <!-- forja:kits -->
-Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: from the Forja app, as a job you can follow, answer and stop. 7 kits, 44 skills, 72 agents. One install brings all of them: [Install](#install).
+Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: from the Forja app, as a job you can follow, answer and stop. 7 kits, 44 skills, 75 agents. One install brings all of them: [Install](#install).
 
 | | Kit | For | Skills |
 |---|---|---|---|

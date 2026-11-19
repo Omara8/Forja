@@ -1,0 +1,18 @@
+# Line endings the same on every computer (0.12.0): text files keep \n in the repository and in every checkout, Windows
+# included, so bash runs the .sh scripts and tests that compare text exactly pass. PowerShell scripts get Windows endings.
+* text=auto eol=lf
+*.sh text eol=lf
+*.ps1 text eol=crlf
+
+# Never changed by git
+*.png binary
+*.ico binary
+*.icns binary
+*.ttf binary
+*.zip binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
+# The font licence as its authors ship it (Windows line endings), kept byte for byte
+OFL-*.txt -text
