@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/forja-0.12.1-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.12.1">
+<img src="https://img.shields.io/badge/forja-0.13.0-e8571c?style=flat-square&labelColor=20242b" alt="Forja 0.13.0">
 <img src="https://img.shields.io/badge/lifecycle-requirements%20%E2%86%92%20code-2f6fb5?style=flat-square&labelColor=20242b" alt="Lifecycle: from requirements to code">
-<img src="https://img.shields.io/badge/kits-7%20·%2044%20skills%20·%2075%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="7 kits, 44 skills, 75 agents">
+<img src="https://img.shields.io/badge/kits-7%20·%2046%20skills%20·%2077%20agents-d9b45a?style=flat-square&labelColor=20242b" alt="7 kits, 46 skills, 77 agents">
 <img src="https://img.shields.io/badge/runs%20on-claude%20·%20codex%20·%20copilot-69727f?style=flat-square&labelColor=20242b" alt="Runs on Claude Code, Codex or GitHub Copilot">
 <img src="https://img.shields.io/badge/macOS%20·%20Linux%20·%20Windows-69727f?style=flat-square&labelColor=20242b" alt="macOS, Linux and Windows">
 <img src="https://img.shields.io/badge/license-proprietary-69727f?style=flat-square&labelColor=20242b" alt="Proprietary license">
@@ -121,7 +121,7 @@ The dashboard's Needs you lists everything waiting for you.
 
 | | |
 |---|---|
-| **One fresh call per step** | Each agent gets only the files it needs, no shell, no web, and ends; nothing carries over |
+| **One fresh call per step** | Each agent gets what its step needs and the job's brief; its commands go through the guard and your approval; no web; nothing else carries over |
 | **Agents answer, Forja writes** | A writing agent never writes the product. It gets its own sandbox in the run and writes one JSON file per item there: `sandbox-business-rule-1.json` for a new item (its links name its other new items by those sandbox names, existing items by their real ids), `changes/flow-3.json` for a change to an existing item. When the agent stops, Forja takes its sandbox in turn (first come, first served): it gives each new item its real id, rewrites the links, writes the whole set through the write gateway, all or nothing, and clears the sandbox. A sandbox that touches what an earlier one just wrote is checked again by its agent. Every change is first applied to a throw-away copy of the product and checked there (0.9.0). One that is refused or would break the product gets one fix round (the same agent, from an empty sandbox, told why), then an offline review whose answers go to the agent once; nothing loops and the run never stops without saying why. Review agents return their findings in a JSON file |
 | **You decide** | Drafts are shown for review; writing skills show their plan first: all of it, part of it, or ask for changes |
 | **Nothing assumed** | No technical question has a default. Each shows the recommended option with its reason; you choose |
@@ -186,12 +186,12 @@ The dashboard's Needs you lists everything waiting for you.
 ## Kits and skills
 
 <!-- forja:kits -->
-Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: from the Forja app, as a job you can follow, answer and stop. 7 kits, 44 skills, 75 agents. One install brings all of them: [Install](#install).
+Forja is the tool. Each kit does one part of delivery and holds skills; a skill runs agents (AI) and scripts (no AI). Every skill runs the same way: from the Forja app, as a job you can follow, answer and stop. 7 kits, 46 skills, 77 agents. One install brings all of them: [Install](#install).
 
 | | Kit | For | Skills |
 |---|---|---|---|
-| <img src="docs/assets/readme/kits/kit-code-insight.svg" width="20" height="20" alt=""> | **code-insight** | Understanding legacy code and planning its rebuild | 4 |
-| <img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="20" height="20" alt=""> | **scope-clarity** | Requirements: needs, scope, acceptance criteria, sign-off | 7 |
+| <img src="docs/assets/readme/kits/kit-code-insight.svg" width="20" height="20" alt=""> | **code-insight** | Understanding legacy code and planning its rebuild | 5 |
+| <img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="20" height="20" alt=""> | **scope-clarity** | Requirements: needs, scope, acceptance criteria, sign-off | 8 |
 | <img src="docs/assets/readme/kits/kit-architecture-blueprint.svg" width="20" height="20" alt=""> | **architecture-blueprint** | Architecture across every stack | 8 |
 | <img src="docs/assets/readme/kits/kit-delivery-cadence.svg" width="20" height="20" alt=""> | **delivery-cadence** | Planning delivery: one plan, each story in the repository that builds it | 6 |
 | <img src="docs/assets/readme/kits/kit-test-readiness.svg" width="20" height="20" alt=""> | **test-readiness** | Test preparation: plan, cases, coverage, data, automation | 6 |
@@ -199,7 +199,7 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | <img src="docs/assets/readme/kits/kit-test-execution.svg" width="20" height="20" alt=""> | **test-execution** | Test runs: results, triage, bugs, fix checks | 4 |
 
 <details open>
-<summary><img src="docs/assets/readme/kits/kit-code-insight.svg" width="28" height="28" align="absmiddle" alt=""> <b>code-insight</b> · 4 skills<br><sub>Understand legacy code and plan its rebuild, with every claim traced to a file.</sub></summary>
+<summary><img src="docs/assets/readme/kits/kit-code-insight.svg" width="28" height="28" align="absmiddle" alt=""> <b>code-insight</b> · 5 skills<br><sub>Understand legacy code and plan its rebuild, with every claim traced to a file.</sub></summary>
 
 | Skill | What it does |
 |---|---|
@@ -207,16 +207,18 @@ Forja is the tool. Each kit does one part of delivery and holds skills; a skill 
 | `explain-code` | One file, method or class explained |
 | `architecture-report` | The existing system's structure: ARCHITECTURE.md and DIAGRAMS.html |
 | `modernize` | The legacy scope as one report: features, flows, rules, dead code and legacy bugs |
+| `security-audit` | One repository's security, whatever its platform: a threat model, then every file against the standards that apply |
 
 </details>
 
 <details>
-<summary><img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="28" height="28" align="absmiddle" alt=""> <b>scope-clarity</b> · 7 skills<br><sub>Turn what stakeholders need into an approved scope, feature by feature, in business language.</sub></summary>
+<summary><img src="docs/assets/readme/kits/kit-scope-clarity.svg" width="28" height="28" align="absmiddle" alt=""> <b>scope-clarity</b> · 8 skills<br><sub>Turn what stakeholders need into an approved scope, feature by feature, in business language.</sub></summary>
 
 | Skill | What it does |
 |---|---|
 | `map-the-product` | An existing product's code and documents → its needs, scope, business rules and flows as built |
 | `elicit-requirements` | Documents + your answers → needs, goals, scale and success measures |
+| `write-requirements` | Needs, scope, business rules and flows, and acceptance criteria in one job, by one writer, reviewed once |
 | `define-scope` | Needs → scope items: what is in and what is out |
 | `analyze-requirements` | Scope → business rules with their values, flows with their steps; gaps as questions |
 | `define-acceptance-criteria` | Given / When / Then for every flow outcome and rule |

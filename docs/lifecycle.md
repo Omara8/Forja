@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.12.1 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.13.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -354,7 +354,7 @@ Other 0.9.0 changes:
   says what it did with every file of the repository, and FILES.md lists each one. Facts kept from earlier runs are reused in
   all three; the recorder describes only units whose files changed.
 - **Offline reviews.** Only a decision reaches you: a change that would clash with the product. What Forja itself cannot
-  write (a field missing, a link to nothing) gets the one fix round, and then the job stops saying it is Forja's own error. A
+  write (a field missing, a link to nothing) gets the one fix round, and then it goes back to its writer until it can be written or you stop. A
   link to something Forja left out of the design is moved to what replaced it or dropped, and the run's notes say which. A
   writer's offline review lives and ends with its job: answered on its page, the answers go to the job's own question; the job
   ending closes it. A point names items by their titles, and a point said twice is one point. One status everywhere (the list,
@@ -460,9 +460,41 @@ Other 0.9.0 changes:
 - **Python's compiled copies.** Every command Forja runs in a repository (build, tests, coverage, test execution's suite) keeps
   Python's compiled copies in a new empty folder, deleted after. Python reuses a compiled copy when a file's size and its time in
   whole seconds are unchanged, so a same-size fix written in the same second as the run before it ran the old code. Your
-  repository's own `__pycache__` is never read, changed or deleted.
+  repository's own `__pycache__` is never read, changed or deleted. (Removed in 0.13.0: a command runs exactly as the
+  repository's line says, with no language's setting added.)
 - **Migration.** One step, `environments`: the environments the product's items name (the plan, the test strategy, test
   resources) become environments, with the keys the automated tests read; no value is added. A setting of a plan written
   before 0.12.0 has no type: its key comes in as "Not set" (never guessed from its name) and you pick its type on the page; a
   Not set key stops only test execution. Every older node reaches 0.12.0 in one jump.
+
+## No stack's names in Forja (0.13.0)
+
+- **One profile for every kit.** Code insight's jobs read and confirm the repository's profile first, as development does. The
+  project reader also writes the structure: each module's kind (app, library, tests, build logic), whether an app runs on a
+  person's device or a server, what it uses, publishes, declares and bundles, the folders with code in no module, the outside
+  tools, the team's own names and the registries. A script checks only what holds for any build (each kind, each "uses"
+  names a module, every code file is in a module or listed with why); you confirm it once, and a line or a module a job proves
+  wrong is corrected with you. The design map, modernize and the feature report draw and read that structure; the scripts
+  that read every build system's files are gone. A profile confirmed before 0.13.0 has no structure: only that part is read
+  again.
+- **One listing.** Every kit, the engine and the guard list a repository's files the same way: what git ignores, git's own
+  folder, hidden folders the profile does not name (before a profile is confirmed, all of them are read: the CI settings are
+  there) and what the profile lists as generated are left out. A generated folder may be listed by name; its files are never
+  read. A repository is the folder you chose.
+- **What shows the architecture.** The architecture report's picker decides which imports are integrations; the script gives
+  facts that hold for any language (each file's import lines, its addresses, its top-level lines, how many files import it).
+- **Is it still used?** The agents judge whether code is used, reading how this repository wires it; a script checks each
+  claim by which files name it, and a claim it contradicts goes back to the agent once with those files.
+- **Calls between repositories.** The architecture report's recorder names each call with the file and line on both sides; a
+  script checks both exist and both repositories are the product's, else it is an open question.
+- **Variants and commands.** Modernize finds the same file under another folder whatever the build tool calls it, with one
+  threshold. A command runs exactly as the repository's line says, with no language's setting added.
+- **Secrets.** The secrets check runs every shape on every text file, whatever its type or platform.
+- **A map that drifts.** The design map drifting as the code changes is expected and never forces a run: a repository whose
+  build files changed since its structure was confirmed is a proposal from Forja-Orchestrator (Product) to refresh the map, and
+  the architecture report then reads only the structure again.
+- **Fewer name rules.** Modernize's tooling check starts from the folders the profile puts outside every module and from code
+  nothing names; the feature report finds a feature's texts in any text file and its analyst counts the test cases; the
+  module-finder's facts say which file imports which by name, and it adds what the imports don't show. Modernize's
+  solution-folder commands (never run by the app) are gone.
 
