@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.14.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.14.1 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -362,7 +362,7 @@ Other 0.9.0 changes:
   review closes an open one; it needs a reason ("Why are you closing it?"), and a job waiting on it goes on without the change
   and logs why. A platform section created again for its platform is a change to it, never a refusal.
 - **What agents are told.** Every agent on a repository is told how a search gets through the guard and which files the
-  secrets check keeps from it (a bundled library too large to check, a file skipped there). A file filter lists names: only a
+  secrets check keeps from it (a file skipped there; 0.14.1: no file is kept back for its size, every file is scanned). A file filter lists names: only a
   secret name refuses it. A job's log says when it waits for an answer and how long the answer took.
 - **Needs you.** Each row has a ×: the row is hidden from Needs you for good, stays open, and is listed in To answer. Hide folds
   the whole box until Forja is closed. An open question is answered on its page (Answer), and waits in review to be folded in.
@@ -396,8 +396,9 @@ Other 0.9.0 changes:
   never cut; the unchanged fields folded; the reason; everything that relies on it marked still holds or breaks.
 - **Development.** Build and compile always run; the tests are your choice, and with "No tests this time" the job ends Done,
   built, not tested. A code-rewriting tool the ticket asks for runs first, with the line you give (or Forja finds for your
-  stack), in your terminal, on your project (a dry run puts back only what it changed); its changes are the first preview page, Forja's own code the second,
-  your manual steps the third, then the build loop (your hint every round, until it passes or you stop). Discard puts it back.
+  stack), in your terminal, on your project (a dry run puts back only what it changed); its changes are the first preview page, Forja's own code and
+  your manual steps the second (0.14.1: one preview: Approve waits until you marked each manual file done; Reject is always
+  there), then the build loop (your hint every round, until it passes or you stop). Discard puts it back.
 - **The Copilot hook.** It never ends with an error (an error is an explicit refusal with its reason), runs only the step's own
   kit's guard, refuses rather than let a call through when it can't decide in time, and records every decision: a call that ran
   tools with no decision recorded is said on the job. The foreign-hooks check covers every place Copilot reads hooks
@@ -443,13 +444,14 @@ Other 0.9.0 changes:
   it, never see it. Deleting a row, an environment or the product deletes its secrets. No AI ever reads a secret: Forja's
   script reads it when a run starts, gives it to the test process only, and replaces it with ‹KEY› in every output; the guard
   refuses any command that reads Forja's secrets.
-- **Files with secrets stay manual.** A plan's change to a file that holds a secret is a manual step: shown on the cleaned
-  copy (each secret line said, never shown), with the real file's full path (Open the file, Copy the path). After Done, each
-  file is checked for secrets again at once, by itself. Its secrets on the lines the step expected and the file changed: your
-  change is final, its cleaned copy and hash are renewed, nothing is asked. Secrets added, removed or moved: you decide again
-  for that file, shown the lines now and the lines expected. A file that hasn't changed is said (Check again, or not now).
-  Then Forja checks your change matches the step. A secret a change needs becomes a reference (`${API_TOKEN}`) and an
-  environment key.
+- **Files with secrets stay manual.** A change to a file that holds a secret is a manual step (0.14.1): in the same preview as
+  Forja's own files, shown on the cleaned copy (each secret line said, never shown), with a tick and Mark done; you make it in
+  your editor and press Mark done, and Approve opens once every ticked one is done (unticked: left out of the run). When the
+  session changed such a file itself, Forja puts the file back and moves the change to the manual steps; nothing is sent back.
+  A doctor's fix to such a file is a manual entry of the fix's preview: Apply waits for Mark done. After Approve or Apply each
+  file is checked for secrets again at once, by itself: its secrets on the lines expected, the cleaned copy and hash are
+  renewed and nothing is asked; secrets added, removed or moved, you decide again for that file. A failure that names a file
+  you changed by hand shows its entry with the failure's lines.
 - **Edit.** One Edit on every item's page, as in Jira: every field and link (links as chips, found by typing 3 characters or
   more, only items the product holds). Save starts the job of the item's stage with the edit in it (append-requirements,
   append-design, append-plan, the new append-tests; a bug through report-bugs, which updates that same bug): Forja words it as
@@ -533,7 +535,7 @@ Other 0.9.0 changes:
   repository (a document you gave) goes back to the session. Manual steps are their own section: a plain preview of the lines
   before and after, with no buttons.
 - **What happened, dated and answered.** Every line of a job's timeline shows its date and time, and each answer says what
-  you answered ("Answered after 5 s: Apply them"), cut when long, with Show all.
+  you answered ("Answered after 5 s: Apply them"); a long answer is shortened with Show more at its end, which opens it in place (0.14.1: the one thing on screen ever shortened).
 - **No fixed paths.** The Android SDK is looked for where your OS installs it; a line such as `.\gradlew.bat test` is read
   the Windows way on Windows; the tests find the public repository from `FORJA_PUBLIC`.
 - **A tool's line with a secret.** The command box of a tool the ticket asks for is never screened: a line that needs a
