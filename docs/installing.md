@@ -12,6 +12,10 @@ files they all use, ready to run: compiled, with its own Python 3.13. Install ei
   `forja upgrade` stop with "Forja needs an Apple Silicon Mac (M1 or newer)." and change nothing, so the 0.9.0 already installed
   keeps working. There is no desktop app for Intel Macs.
 - At least one AI tool, signed in with a subscription or an API key: Claude Code (`claude`), OpenAI Codex (`codex`) or the GitHub Copilot command line (`copilot`).
+- Tested AI tool versions (0.14.0): Forja reads each tool's own output, recorded from these versions and tested on every
+  release: Claude Code 2.1.331, OpenAI Codex 0.172.0, GitHub Copilot command line 1.0.114. Another version works as a rule;
+  `forja doctor` and Settings → AI tools say when yours is not one of them, since Forja may misread what it prints. Nothing is
+  blocked.
 - Nothing else: no Python to install.
 
 ## The desktop app
@@ -47,7 +51,7 @@ start it. Settings → About shows the engine's version and checks for an update
 | Linux, curl | the same command | `/opt/forja` (sudo once), and the `forja` command in `/usr/local/bin` |
 | Windows, PowerShell | `irm https://github.com/Omara8/Forja/releases/latest/download/install.ps1 \| iex` | `%USERPROFILE%\forja` (no administrator rights) |
 
-The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.13.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
+The installers are files of each release (the commands above take the newest one). They download the release for your computer and check it before anything is put in place: with [cosign](https://docs.sigstore.dev) installed, its Sigstore signature (it must come from Forja's release workflow); without cosign, its SHA-256 only, and they say the signature was not checked. The release workflow signs every file of a release; each has its `.sha256` and its `.sigstore.json`. `FORJA_VERSION=0.14.0` installs a given release; `FORJA_ROOT=<folder>` another folder (never a hidden one).
 
 The first `forja` (or `forja setup` at any time) sets up this computer:
 

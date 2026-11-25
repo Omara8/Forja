@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.13.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.14.0 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -379,7 +379,7 @@ Other 0.9.0 changes:
   skill's playbook, so the skill learns without changing the kit's other skills. Every step and every question of the job
   runs: it only prefills (each answer with the file and lines it came from: you accept it or change it) and words questions
   for the product (same meaning, the same options in the product's words; plan approvals, secrets decisions, the gate's holds
-  and manual steps keep Forja's words). "Steps per job" is 250 by default and at most, one number for every AI tool. Each job's
+  and manual steps keep Forja's words). "Steps per job" is 250 by default and takes any number from 5 up, one number for every AI tool; a job that uses them all pauses with its work kept, and Continue goes on once you raised it. Each job's
   page has a timeline of its turns. **Forja-Orchestrator (Product)** looks at a product after every job that changed it: it
   reads each kit's state (kept by a script) and what that job changed, never the whole product, and proposes up to 3 next
   jobs, each with why and its evidence. It never starts a job and never changes an item: the dashboard and the side panel show
@@ -461,7 +461,7 @@ Other 0.9.0 changes:
   Python's compiled copies in a new empty folder, deleted after. Python reuses a compiled copy when a file's size and its time in
   whole seconds are unchanged, so a same-size fix written in the same second as the run before it ran the old code. Your
   repository's own `__pycache__` is never read, changed or deleted. (Removed in 0.13.0: a command runs exactly as the
-  repository's line says, with no language's setting added.)
+  repository's line says, with no language's setting added; every file Forja writes is written newer instead.)
 - **Migration.** One step, `environments`: the environments the product's items name (the plan, the test strategy, test
   resources) become environments, with the keys the automated tests read; no value is added. A setting of a plan written
   before 0.12.0 has no type: its key comes in as "Not set" (never guessed from its name) and you pick its type on the page; a
@@ -489,6 +489,23 @@ Other 0.9.0 changes:
   script checks both exist and both repositories are the product's, else it is an open question.
 - **Variants and commands.** Modernize finds the same file under another folder whatever the build tool calls it, with one
   threshold. A command runs exactly as the repository's line says, with no language's setting added.
+- **Agents read without asking you.** An agent's command that only reads (in any folder it changes to, in a loop over
+  several files, in a condition or a subshell), lists or writes inside its own step runs at once: the product's archive, the run folder and the repositories registered to the product are
+  read freely, every path still checked for secrets like a read of the file (a secret file outside a repository included).
+  You are asked only about a tool from outside Forja: one the ticket names, a plugin such as fastlane or OpenRewrite, an
+  installer, the network. A command that could read around the secrets check (code typed on the line, a command built from
+  another one's output) is refused, never asked: the agent reads another way.
+- **A session never gives up on a blocked tool.** When a build, a test or a search can't run, the session still makes the
+  change: a file it may not write (it holds secrets) becomes a manual step for you, and what it could not build or test is
+  said, for Forja's own build and tests after you approve the preview. A step that stopped because calls were refused is not
+  run again by itself: you are asked at once, the refused calls named, and your answer goes to the same session.
+- **Forja's own build tool and search always run.** Every agent is given their exact commands with Forja's own Python, they
+  run without asking you, and the AI tool is given Forja's script folders. A search over a whole repository that would print
+  secret lines is refused, naming Forja's search, which prints the same lines with secret lines left out.
+- **Files written newer.** Every file Forja writes into a repository (the approved code, file operations, a tool's kept
+  changes, the build doctor's fix, Discard putting a file back) gets a modified time at least one whole second later than it
+  had before. Build tools of any language may take a file whose size and time in whole seconds are unchanged as unchanged, so a
+  same-size fix written in the same second as the run before it would have built the old code.
 - **Secrets.** The secrets check runs every shape on every text file, whatever its type or platform.
 - **A map that drifts.** The design map drifting as the code changes is expected and never forces a run: a repository whose
   build files changed since its structure was confirmed is a proposal from Forja-Orchestrator (Product) to refresh the map, and
@@ -498,3 +515,26 @@ Other 0.9.0 changes:
   module-finder's facts say which file imports which by name, and it adds what the imports don't show. Modernize's
   solution-folder commands (never run by the app) are gone.
 
+## Profile in four parts (0.14.0)
+
+- **How a repository builds and tests: four parts.** The profile holds the build line, each kind of test (its line, one-test
+  line, what it needs, where its tests live and its results land), coverage and lint, and nothing else. You confirm it once
+  and are never asked again. A line a job proves wrong is corrected by the build doctor and kept with no question, the
+  timeline saying so; a corrected line that brings in another program is asked first, and after 3 tries you are asked once
+  for the right line.
+- **What git ignores is never read.** Build output and generated code come from `.gitignore` (every one of the repository),
+  never from the profile; a hidden folder is the repository's like any other.
+- **What a repository is made of is code insight's.** Its modules, what each is, uses and bundles, the code outside them and
+  the build files are read and confirmed once by the code insight jobs that draw or use them (the architecture report,
+  modernize, the security audit), and kept apart from the profile. A profile confirmed before 0.14.0 is read again once.
+- **Job time is counted time.** A job's time is its steps while they run plus waiting for your answer while Forja is open;
+  the running step's card ("this step … · job time …") and the jobs list show it, never the time from its start to its end.
+- **Previews show only real changes.** A plan entry that changes nothing is never shown, and a name that is no file of the
+  repository (a document you gave) goes back to the session. Manual steps are their own section: a plain preview of the lines
+  before and after, with no buttons.
+- **What happened, dated and answered.** Every line of a job's timeline shows its date and time, and each answer says what
+  you answered ("Answered after 5 s: Apply them"), cut when long, with Show all.
+- **No fixed paths.** The Android SDK is looked for where your OS installs it; a line such as `.\gradlew.bat test` is read
+  the Windows way on Windows; the tests find the public repository from `FORJA_PUBLIC`.
+- **A tool's line with a secret.** The command box of a tool the ticket asks for is never screened: a line that needs a
+  password, token or key is run in your own terminal, then "I applied it manually" shows what you changed for Keep or Reject.
