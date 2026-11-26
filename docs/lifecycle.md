@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.14.1 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.14.2 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -379,7 +379,7 @@ Other 0.9.0 changes:
   skill's playbook, so the skill learns without changing the kit's other skills. Every step and every question of the job
   runs: it only prefills (each answer with the file and lines it came from: you accept it or change it) and words questions
   for the product (same meaning, the same options in the product's words; plan approvals, secrets decisions, the gate's holds
-  and manual steps keep Forja's words). "Steps per job" is 250 by default and takes any number from 5 up, one number for every AI tool; a job that uses them all pauses with its work kept, and Continue goes on once you raised it. Each job's
+  and manual steps keep Forja's words). "Steps per job" is 250 by default and takes any number from 5 up, one number for every AI tool; a job that uses them all pauses with its work kept, and Continue goes on once you raised it. 0.14.2: "Steps per agent" is every agent's turns (0: each agent's own number); an agent that uses them all pauses the job the same way. Each job's
   page has a timeline of its turns. **Forja-Orchestrator (Product)** looks at a product after every job that changed it: it
   reads each kit's state (kept by a script) and what that job changed, never the whole product, and proposes up to 3 next
   jobs, each with why and its evidence. It never starts a job and never changes an item: the dashboard and the side panel show
