@@ -15,8 +15,8 @@ first (Close and reopen, or Keep it open); a job waiting for your answer is neve
 
 | Screen | What it shows | What you do there |
 |---|---|---|
-| **Guide** | What Forja can do, read from the code itself: the six kits with their skills and approving roles; for each product type, when each area opens (and, for an existing or live product, what a ticket fills in); four ways to work: a new idea, MVP or PoC; an existing product straight to development; an existing product straight to a test plan; legacy code understood first. With a product open, which of its areas are open now and why the others are not | Pick a path and start its first step for the open product |
-| **Ask about this product** | A side panel beside any screen of a product; × closes it | 0.11.3: Forja-Orchestrator (Product)'s proposals at the top (the same list as the dashboard, each with Start and ×). Ask Forja-Orchestrator (Product) a question about the product; it answers from the items, what the documents say and the code, citing item ids, as a job that reads only (0.11.0). An item opens on the product page's own details screen, with what you can do with it in the bar above |
+| **Guide** | What Forja can do, read from the code itself: the six kits with their skills and approving roles; for each product type, when each area opens (and, for an existing or live product, what a ticket fills in); four ways to work: a new idea, MVP or PoC; an existing product straight to development; an existing product straight to a test plan; legacy code understood first. With a product open, which of its areas are open now and why the others are not. 0.14.3: best practices, hand-written in topics: getting started, scenarios, filling in the details (the secrets check, the profile, the design map, the plan preview ...), how to answer each skill, and what to do when something goes wrong; an index and a search on the left, and each topic its own link (`#/guide/<topic>`) | Pick a path and start its first step for the open product; search the Guide or open a topic |
+| **Forja helper** (0.14.3) | A side panel beside any screen (top bar: Forja helper); × closes it | Forja-Orchestrator (Harness): ask anything about Forja, any product on this computer or a job. It sees the screen, the product and the job you are on; answers how Forja works from the Guide, passes a question about any product to Forja-Orchestrator (Product) (from that product's items, citing their ids, whichever screen you are on) and a job question to that job's Forja-Orchestrator (Job); each answer says who answered, gives links that only take you somewhere, and what its AI calls cost; the chat strip says the chat's total. A first chat offers four starter questions. History lists every chat (one list across products): its title, products (a deleted one said), answers, cost and full start date and time; search, open where it left off, or Delete (confirmed). Chats are kept on this computer only (`_local/chats/`), never exported. A new question about a product deleted since is answered with just that: it is no longer on this computer, so there is no record of it to answer from. Its words are always plain and polite. It never starts a job or changes an item |
 | **Home** | Every product on this computer (name and folder, type, the Forja version that wrote it, platforms, ticket key, idle or busy), Being worked across all products, and Waiting for you (open clashes and offline reviews) | Open a product, start a New product, watch a job. A product whose folder was moved outside Forja is listed under Folder not found: Locate folder… points Forja at it again |
 | **New product** | One page, in order: 1. new product or existing software; 2. documents about it (files, a folder or a note), or "No documents exist yet" (then no job asks); 3. the name (its folder is made inside Forja's products folder, Settings → Storage) and ticket key (a key is suggested from the name); 4. the platforms (Other asks right there what it is, for example java library); 5. each platform's repositories, or "No code yet" for it | Create the product. A product from another computer comes in through Settings → Storage, never here |
 | **Migration** | A product written by an older Forja: the steps from its version to this one, with their time | Migrate it. Nothing else opens it until it is migrated |
@@ -155,10 +155,18 @@ An import takes a `.forja` file or a product folder in two steps:
 2. Import (or Update) it: nothing is added until you confirm; when the gate found something, you confirm keeping it too.
 
 An update takes everything new or newer in the file; when an item here is newer than the file's (it changed here since the
-export), nothing is taken and Forja names the items. The copy it replaces is kept in `_local/taken-back/`. Both sides must run the
-same Forja version: a file from any other version, a patch release too, is refused. An import also refuses an Archive folder that
+export), nothing is taken and Forja names the items. The copy it replaces is kept in `_local/taken-back/`. A file an older Forja
+exported (0.14.3) is brought to this version as it comes in, on a folder of its own and before anything is checked or taken (the
+card says so); it cleans only that copy, never this computer's caches, profiles or secrets decisions. A file a newer Forja wrote is
+refused: update Forja first. An import also refuses an Archive folder that
 already holds the product, any entry outside the product folder, links, files over 50 MB (100 MB in all) and items that break
 Forja's model. The imported product is marked as from outside until a person here has read it through and marked it reviewed.
+
+A product folder you copied into the products folder yourself is listed under "In the products folder, not added yet" (0.14.3):
+**Add it** shows the same preview and adds it where it is, nothing copied, with the same checks (links, Forja's model, what the gate
+finds) and marked as from outside. One an older Forja saved is brought to this version there and then, before it is checked, the
+same way as an import (it cleans only that folder, never this computer's caches, profiles or secrets decisions); one a newer Forja saved
+is refused (update Forja first); a second copy of a product this computer already has is refused, naming where that product is.
 
 ## The engine: `forja serve --json`
 

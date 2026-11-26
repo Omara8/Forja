@@ -2,7 +2,7 @@
 
 [← Forja](../README.md)
 
-Forja 0.14.2 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
+Forja 0.14.3 keeps every product on one source of truth, the backbone: **tickets** for Jira work and **objects** for every fact,
 read and written only through Forja's write gateway. Forja runs offline, on one computer, from its desktop app, and only one job
 writes a product at a time. How the app looks: [the desktop app](desktop-app.md).
 
@@ -146,7 +146,9 @@ A product leaves this computer only whole, by Export (the product's Settings) an
 |---|---|
 | Export | One `<name>.forja` file with every item's version: a backup, or the product on another computer |
 | Import of a product this computer has | An update: everything new or newer in the file is taken; generated files are built again. An item newer here refuses it, and Forja names the item. The old copy is kept in `_local/taken-back/` |
-| A different Forja version | Refused: both sides run the same Forja version |
+| A file an older Forja exported | 0.14.3: brought to this version as it comes in, by the same migration steps an upgrade runs, on a folder of its own, before it is checked or anything is taken; it cleans only that copy, never this computer's caches, profiles or secrets decisions |
+| A file a newer Forja exported | Refused: update Forja on this computer first |
+| A product folder copied into the products folder by hand | 0.14.3: Add it, under "In the products folder, not added yet", adds it where it is, nothing copied, with an import's checks; one an older Forja saved is migrated there first the same way (never this computer's caches, profiles or secrets decisions); one a newer Forja saved is refused |
 
 ## From a planned story to code
 
@@ -382,8 +384,8 @@ Other 0.9.0 changes:
   and manual steps keep Forja's words). "Steps per job" is 250 by default and takes any number from 5 up, one number for every AI tool; a job that uses them all pauses with its work kept, and Continue goes on once you raised it. 0.14.2: "Steps per agent" is every agent's turns (0: each agent's own number); an agent that uses them all pauses the job the same way. Each job's
   page has a timeline of its turns. **Forja-Orchestrator (Product)** looks at a product after every job that changed it: it
   reads each kit's state (kept by a script) and what that job changed, never the whole product, and proposes up to 3 next
-  jobs, each with why and its evidence. It never starts a job and never changes an item: the dashboard and the side panel show
-  the same list, each with Start and ×.
+  jobs, each with why and its evidence. It never starts a job and never changes an item: the dashboard shows the list, each
+  with Start and ×.
 - **The end-of-job check.** Before a skill's job ends, a script checks that every deliverable of the skill is there (they are
   always on) and that nothing it delivered holds a secret-looking line (removed in one fix round); what is still wrong goes to
   you.
@@ -405,7 +407,8 @@ Other 0.9.0 changes:
   (`~/.copilot/hooks`, `~/.copilot/settings.json`, each repository's `.github/hooks` and `.claude/settings.json`).
 - **Each job.** Its page shows processing time (Forja doing something) and total time (plus waiting for you while Forja was
   open; hours with Forja closed never count), the credits Copilot recorded for each agent call (1 credit = $0.01; older plans:
-  premium requests after the model's multiplier), and the security layers that ran on it.
+  premium requests after the model's multiplier), with the job's total above them (0.14.3: each unit summed apart, a call that
+  reported nothing counted and said, never a guess), and the security layers that ran on it.
 - **Migration.** One step, `orchestrator-keys`: every kept job's record (stopped, failed or waiting in 0.11.2) has its step
   keys renamed to Forja-Orchestrator, so Resume and Retry give back every step it finished. A step that really changed is
   run again with your earlier answers offered. Every older node reaches 0.11.3 in one jump.
